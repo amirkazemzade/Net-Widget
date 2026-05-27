@@ -22,7 +22,9 @@
     <string name="show_password">Show password</string>
     <string name="no_content_available">No content available</string>
     <string name="gigabyte_short">GB</string>
+    <string name="gigabyte_full">Gigabytes</string>
     <string name="megabyte_short">MB</string>
+    <string name="megabyte_full">Megabytes</string>
     <string name="navigate_back">Navigate Back</string>
     <string name="customize_widget">Customize Widget</string>
     <string name="save">Save</string>
@@ -30,4 +32,7 @@
     <string name="percentage">Percentage</string>
     <string name="traffic">Traffic</string>
     <string name="preview">Preview</string>
+    <string name="short_text">Short</string>
+    <string name="full">Full</string>
+    <string name="suffix_display_mode">Suffix Display Mode</string>
 </resources>

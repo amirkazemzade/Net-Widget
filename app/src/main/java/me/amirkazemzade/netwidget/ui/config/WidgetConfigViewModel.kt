@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.amirkazemzade.netwidget.domain.models.DataDisplayMode
 import me.amirkazemzade.netwidget.domain.models.RequestStatus
+import me.amirkazemzade.netwidget.domain.models.SpellingMode
 import me.amirkazemzade.netwidget.domain.usecases.GetRemainedWidgetConfigUseCase
 import me.amirkazemzade.netwidget.domain.usecases.SetRemainedWidgetConfigUseCase
 import javax.inject.Inject
@@ -48,6 +49,16 @@ class WidgetConfigViewModel @Inject constructor(
             widgetConfigUiState.copy(
                 remainedWidgetConfig = widgetConfigUiState.remainedWidgetConfig.copy(
                     dataDisplayMode = dataDisplayMode
+                )
+            )
+        }
+    }
+
+    fun updateSpellingMode(spellingMode: SpellingMode) {
+        _currentConfigState.update { widgetConfigUiState ->
+            widgetConfigUiState.copy(
+                remainedWidgetConfig = widgetConfigUiState.remainedWidgetConfig.copy(
+                    spellingMode = spellingMode
                 )
             )
         }

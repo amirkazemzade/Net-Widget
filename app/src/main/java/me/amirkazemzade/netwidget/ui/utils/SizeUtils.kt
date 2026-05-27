@@ -1,6 +1,8 @@
 package me.amirkazemzade.netwidget.ui.utils
 
 import android.content.res.Resources
+import android.graphics.Rect
+import android.graphics.Typeface
 import android.text.TextPaint
 import android.util.TypedValue
 
@@ -26,8 +28,18 @@ fun textFitsInContainer(
 
     val paint = TextPaint().apply {
         this.textSize = textSizePx
+        this.isAntiAlias = true
+        this.typeface = Typeface.defaultFromStyle(Typeface.BOLD_ITALIC)
     }
-    val textWidthPx = paint.measureText(text)
+    val bounds = Rect()
+    paint.getTextBounds(text, 0, text.length, bounds)
+    val actualTextWidthPx = bounds.width().toFloat()
 
-    return textWidthPx < containerWidthPx
+    val safetyBufferPx = TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        8f,
+        resources.displayMetrics
+    )
+
+    return (actualTextWidthPx + safetyBufferPx) < containerWidthPx
 }

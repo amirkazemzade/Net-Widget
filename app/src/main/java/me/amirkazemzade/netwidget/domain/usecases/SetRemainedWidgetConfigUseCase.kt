@@ -19,6 +19,7 @@ class SetRemainedWidgetConfigUseCase @Inject constructor(
 
         try {
             remainedLocalDataSource.setDataDisplayMode(config.dataDisplayMode)
+            remainedLocalDataSource.setSpellingMode(config.spellingMode)
             emit(RequestStatus.Success(Unit))
         } catch (e: Exception) {
             emit(RequestStatus.Error(message = e.localizedMessage ?: "Something went wrong"))

@@ -11,13 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import me.amirkazemzade.netwidget.R
-import me.amirkazemzade.netwidget.domain.models.DataDisplayMode
+import me.amirkazemzade.netwidget.domain.models.SpellingMode
 
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
-fun DataDisplayModeCard(
-    selectedMode: DataDisplayMode,
-    onSelectMode: (DataDisplayMode) -> Unit,
+fun SuffixSpellingModeCard(
+    selectedMode: SpellingMode,
+    onSelectMode: (SpellingMode) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
@@ -26,22 +26,22 @@ fun DataDisplayModeCard(
         shape = RoundedCornerShape(16.dp)
     ) {
         Text(
-            text = stringResource(R.string.data_display_mode),
+            text = stringResource(R.string.suffix_display_mode),
             style = MaterialTheme.typography.titleLargeEmphasized,
             modifier = Modifier.padding(16.dp)
         )
-        DataDisplayModeRadioButton(
+        SuffixSpellingModeRadioButton(
             enabled = enabled,
-            label = stringResource(R.string.percentage),
-            displayMode = DataDisplayMode.PERCENTAGE,
-            selectedDisplayMode = selectedMode,
+            label = stringResource(R.string.short_text),
+            spellingMode = SpellingMode.Short,
+            selectedMode = selectedMode,
             onSelect = onSelectMode,
         )
-        DataDisplayModeRadioButton(
+        SuffixSpellingModeRadioButton(
             enabled = enabled,
-            label = stringResource(R.string.traffic),
-            displayMode = DataDisplayMode.TRAFFIC,
-            selectedDisplayMode = selectedMode,
+            label = stringResource(R.string.full),
+            spellingMode = SpellingMode.Full,
+            selectedMode = selectedMode,
             onSelect = onSelectMode,
         )
     }

@@ -3,6 +3,7 @@ package me.amirkazemzade.netwidget.ui.widgets.remained
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.icu.text.NumberFormat
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -43,12 +44,12 @@ import kotlinx.coroutines.flow.map
 import me.amirkazemzade.netwidget.MainActivity
 import me.amirkazemzade.netwidget.R
 import me.amirkazemzade.netwidget.data.datasource.RemainedLocalDataSource
+import me.amirkazemzade.netwidget.domain.models.DataDisplayMode
 import me.amirkazemzade.netwidget.domain.models.Remained
+import me.amirkazemzade.netwidget.domain.models.SpellingMode
 import me.amirkazemzade.netwidget.domain.models.Traffic
 import me.amirkazemzade.netwidget.ui.utils.textFitsInContainer
 import me.amirkazemzade.netwidget.ui.widgets.components.dynamicPercentagePadding
-import me.amirkazemzade.netwidget.domain.models.DataDisplayMode
-import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 
 class RemainedGlanceWidget1x4 : GlanceAppWidget() {
@@ -60,12 +61,17 @@ class RemainedGlanceWidget1x4 : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val dataSource = RemainedLocalDataSource(context)
+        val dataDisplayModeFlow = dataSource.dataDisplayMode
+                .map { it ?: DataDisplayMode.PERCENTAGE }
+        val spellingModeFlow = dataSource.spellingMode
+            .map { it ?: SpellingMode.Short }
 
         provideContent {
             val remained by dataSource.remainedData.collectAsState(initial = null)
-            val dataDisplayMode by dataSource.dataDisplayMode
-                .map { it ?: DataDisplayMode.PERCENTAGE }
+            val dataDisplayMode by dataDisplayModeFlow
                 .collectAsState(initial = DataDisplayMode.PERCENTAGE)
+            val spellingMode by spellingModeFlow
+                .collectAsState(initial = SpellingMode.Short)
 
             val widgetSize = LocalSize.current
 
@@ -74,6 +80,7 @@ class RemainedGlanceWidget1x4 : GlanceAppWidget() {
                     widgetSize = widgetSize,
                     remained = remained,
                     dataDisplayMode = dataDisplayMode,
+                    spellingMode = spellingMode,
                 )
             }
         }
@@ -107,6 +114,7 @@ class RemainedGlanceWidget1x4 : GlanceAppWidget() {
         widgetSize: DpSize,
         remained: Remained?,
         dataDisplayMode: DataDisplayMode = DataDisplayMode.PERCENTAGE,
+        spellingMode: SpellingMode = SpellingMode.Short,
     ) {
         val context = LocalContext.current
 
@@ -131,6 +139,7 @@ class RemainedGlanceWidget1x4 : GlanceAppWidget() {
                     widgetSize = widgetSize,
                     remained = remained,
                     dataDisplayMode = dataDisplayMode,
+                    spellingMode = spellingMode,
                 )
             }
         }
@@ -156,6 +165,7 @@ class RemainedGlanceWidget1x4 : GlanceAppWidget() {
         widgetSize: DpSize,
         remained: Remained,
         dataDisplayMode: DataDisplayMode,
+        spellingMode: SpellingMode,
     ) {
         val context = LocalContext.current
 
@@ -171,21 +181,23 @@ class RemainedGlanceWidget1x4 : GlanceAppWidget() {
         )
 
         val dataInfoText = when (dataDisplayMode) {
-            DataDisplayMode.PERCENTAGE ->
-                "${(remained.percentage * 100).roundToInt()}%"
+            DataDisplayMode.PERCENTAGE -> remained.percentage.toReadablePercentText()
 
-            DataDisplayMode.TRAFFIC -> remained.traffic.toReadableText()
+            DataDisplayMode.TRAFFIC -> remained.traffic.toReadableTrafficText(
+                spellingMode = spellingMode
+            )
         }
 
         val fontSize = when (dataDisplayMode) {
             DataDisplayMode.PERCENTAGE -> 36.sp
-            DataDisplayMode.TRAFFIC -> 24.sp
+            DataDisplayMode.TRAFFIC if (spellingMode == SpellingMode.Short) -> 24.sp
+            DataDisplayMode.TRAFFIC -> 20.sp
         }
 
         val textFits = textFitsInContainer(
             text = dataInfoText,
             textSizeSp = fontSize.value + 1,
-            containerWidthDp = pillWidth.value,
+            containerWidthDp = (pillWidth - 24.dp).value,
             resources = context.resources
         )
 
@@ -199,7 +211,7 @@ class RemainedGlanceWidget1x4 : GlanceAppWidget() {
             fontStyle = FontStyle.Italic
         )
 
-        val showTextInside = !isLow && textFits
+        val showTextInside = !isLow && (remained.percentage >= 0.5f || textFits)
 
         PillUi(
             pillWidth = pillWidth,
@@ -264,6 +276,50 @@ class RemainedGlanceWidget1x4 : GlanceAppWidget() {
             }
         }
     }
+}
+
+@SuppressLint("LocalContextConfigurationRead")
+@Composable
+private fun Traffic.toReadableTrafficText(
+    spellingMode: SpellingMode = SpellingMode.Short,
+): String {
+    val context = LocalContext.current
+    val (amount, suffix) = when {
+        amountInMb >= 1024 -> {
+            toGB() to when (spellingMode) {
+                SpellingMode.Full -> context.getString(R.string.gigabyte_full)
+                SpellingMode.Short -> context.getString(R.string.gigabyte_short)
+            }
+        }
+
+        else -> toMB() to when (spellingMode) {
+            SpellingMode.Full -> context.getString(R.string.megabyte_full)
+            SpellingMode.Short -> context.getString(R.string.megabyte_short)
+        }
+    }
+
+    val currentLocale = context.resources.configuration.locales[0]
+
+    val numberFormatter = NumberFormat.getInstance(currentLocale).apply {
+        maximumFractionDigits = 2
+        minimumFractionDigits = if (amountInMb >= 1024) 2 else 0
+    }
+
+    val amountFormatted = numberFormatter.format(amount)
+
+    return "$amountFormatted $suffix"
+}
+
+@SuppressLint("LocalContextConfigurationRead")
+@Composable
+private fun Float.toReadablePercentText(): String {
+    val context = LocalContext.current
+    val currentLocale = context.resources.configuration.locales[0]
+
+    val percentFormatter = NumberFormat.getPercentInstance(currentLocale).apply {
+        maximumFractionDigits = 0
+    }
+    return percentFormatter.format(this)
 }
 
 @OptIn(ExperimentalGlancePreviewApi::class)
@@ -335,7 +391,7 @@ private fun RemainedGlanceWidgetPreview100PercentTraffic() {
             RemainedGlanceWidget1x4().Content(
                 widgetSize = widgetSize,
                 remained = remained,
-                dataDisplayMode = DataDisplayMode.TRAFFIC
+                dataDisplayMode = DataDisplayMode.TRAFFIC,
             )
         }
     }

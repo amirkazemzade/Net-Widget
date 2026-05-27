@@ -14,11 +14,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import me.amirkazemzade.netwidget.R
-import me.amirkazemzade.netwidget.ui.config.preview.RemainedWidgetPreview
 import me.amirkazemzade.netwidget.domain.models.DataDisplayMode
+import me.amirkazemzade.netwidget.domain.models.Remained
+import me.amirkazemzade.netwidget.domain.models.SpellingMode
+import me.amirkazemzade.netwidget.ui.config.preview.RemainedWidgetPreview
 
 @Composable
-fun WidgetPreviewBox(selectedDataDisplayMode: DataDisplayMode) {
+fun WidgetPreviewBox(
+    remained: Remained,
+    selectedDataDisplayMode: DataDisplayMode,
+    selectedSpellingMode: SpellingMode,
+) {
     Box(
         modifier = Modifier.padding(horizontal = 32.dp),
     ) {
@@ -41,7 +47,9 @@ fun WidgetPreviewBox(selectedDataDisplayMode: DataDisplayMode) {
         }
 
         RemainedWidgetPreview(
+            remained = remained,
             dataDisplayMode = selectedDataDisplayMode,
+            spellingMode = selectedSpellingMode,
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(vertical = 64.dp)

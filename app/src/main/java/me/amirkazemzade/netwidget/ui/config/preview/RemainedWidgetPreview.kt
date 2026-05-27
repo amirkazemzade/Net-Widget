@@ -1,6 +1,7 @@
 package me.amirkazemzade.netwidget.ui.config.preview
 
 import android.annotation.SuppressLint
+import android.icu.text.NumberFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -17,36 +18,37 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewFontScale
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
+import me.amirkazemzade.netwidget.R
+import me.amirkazemzade.netwidget.domain.models.DataDisplayMode
 import me.amirkazemzade.netwidget.domain.models.Remained
+import me.amirkazemzade.netwidget.domain.models.SpellingMode
 import me.amirkazemzade.netwidget.domain.models.Traffic
+import me.amirkazemzade.netwidget.ui.config.defaults.WidgetConfigDefaults
 import me.amirkazemzade.netwidget.ui.theme.MyShatelMobileAppTheme
 import me.amirkazemzade.netwidget.ui.utils.textFitsInContainer
 import me.amirkazemzade.netwidget.ui.widgets.components.dynamicPercentagePadding
-import me.amirkazemzade.netwidget.domain.models.DataDisplayMode
-import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 @Composable
 fun RemainedWidgetPreview(
     dataDisplayMode: DataDisplayMode,
     modifier: Modifier = Modifier,
+    spellingMode: SpellingMode = SpellingMode.Short,
+    remained: Remained = WidgetConfigDefaults.defaultRemainedValue,
 ) {
-    val remained = Remained(
-        traffic = Traffic((6.7f * 1024).roundToLong()),
-        percentage = 0.67f,
-    )
-
     BoxWithConstraints(
         modifier = modifier,
     ) {
@@ -55,6 +57,7 @@ fun RemainedWidgetPreview(
             widgetSize = widgetSize,
             remained = remained,
             dataDisplayMode = dataDisplayMode,
+            spellingMode = spellingMode,
         )
     }
 }
@@ -65,6 +68,7 @@ private fun RemainedWidgetPreviewContent(
     remained: Remained,
     dataDisplayMode: DataDisplayMode,
     modifier: Modifier = Modifier,
+    spellingMode: SpellingMode,
 ) {
     Box(
         modifier = modifier
@@ -80,6 +84,7 @@ private fun RemainedWidgetPreviewContent(
             widgetSize = widgetSize,
             remained = remained,
             dataDisplayMode = dataDisplayMode,
+            spellingMode = spellingMode,
         )
     }
 }
@@ -90,6 +95,7 @@ private fun PillContent(
     widgetSize: DpSize,
     remained: Remained,
     dataDisplayMode: DataDisplayMode,
+    spellingMode: SpellingMode,
 ) {
     val breakPoint = 0.33f
     val isLow = remained.percentage < breakPoint
@@ -103,21 +109,23 @@ private fun PillContent(
     )
 
     val dataInfoText = when (dataDisplayMode) {
-        DataDisplayMode.PERCENTAGE ->
-            "${(remained.percentage * 100).roundToInt()}%"
+        DataDisplayMode.PERCENTAGE -> remained.percentage.toReadablePercentText()
 
-        DataDisplayMode.TRAFFIC -> remained.traffic.toReadableText()
+        DataDisplayMode.TRAFFIC -> remained.traffic.toReadableTrafficText(
+            spellingMode = spellingMode
+        )
     }
 
     val fontSize = when (dataDisplayMode) {
         DataDisplayMode.PERCENTAGE -> 36.sp
-        DataDisplayMode.TRAFFIC -> 24.sp
+        DataDisplayMode.TRAFFIC if (spellingMode == SpellingMode.Short) -> 24.sp
+        DataDisplayMode.TRAFFIC -> 20.sp
     }
 
     val textFits = textFitsInContainer(
         text = dataInfoText,
         textSizeSp = fontSize.value + 1,
-        containerWidthDp = pillWidth.value,
+        containerWidthDp = (pillWidth - textPadding).value,
         resources = LocalContext.current.resources
     )
 
@@ -131,7 +139,7 @@ private fun PillContent(
         fontStyle = FontStyle.Italic
     )
 
-    val showTextInside = !isLow && textFits
+    val showTextInside = !isLow && (remained.percentage >= 0.5f || textFits)
 
     PillUi(
         pillWidth = pillWidth,
@@ -142,6 +150,51 @@ private fun PillContent(
         textStyle = textStyle
     )
 }
+
+@Composable
+private fun Traffic.toReadableTrafficText(
+    spellingMode: SpellingMode = SpellingMode.Short,
+): String {
+    val context = LocalContext.current
+    val (amount, suffix) = when {
+        amountInMb >= 1024 -> {
+            toGB() to when (spellingMode) {
+                SpellingMode.Full -> context.getString(R.string.gigabyte_full)
+                SpellingMode.Short -> context.getString(R.string.gigabyte_short)
+            }
+        }
+
+        else -> toMB() to when (spellingMode) {
+            SpellingMode.Full -> context.getString(R.string.megabyte_full)
+            SpellingMode.Short -> context.getString(R.string.megabyte_short)
+        }
+    }
+
+    val currentLocale = LocalConfiguration.current.locales[0]
+
+    val numberFormatter = NumberFormat.getInstance(currentLocale).apply {
+        maximumFractionDigits = 2
+        minimumFractionDigits = if (amountInMb >= 1024) 2 else 0
+    }
+
+    val amountFormatted = numberFormatter.format(amount)
+
+    return "$amountFormatted $suffix"
+
+}
+
+@SuppressLint("LocalContextConfigurationRead")
+@Composable
+private fun Float.toReadablePercentText(): String {
+    val context = LocalContext.current
+    val currentLocale = context.resources.configuration.locales[0]
+
+    val percentFormatter = NumberFormat.getPercentInstance(currentLocale).apply {
+        maximumFractionDigits = 0
+    }
+    return percentFormatter.format(this)
+}
+
 
 @Composable
 private fun PillUi(
@@ -204,29 +257,47 @@ private fun PillUi(
 
 
 @PreviewLightDark
+@PreviewFontScale
+@Preview(locale = "fa", name = "Farsi")
 @Composable
 private fun RemainedWidgetComposePreviewPercentage() {
     RemainedWidgetComposePreview(
-        DataDisplayMode.PERCENTAGE
+        dataDisplayMode = DataDisplayMode.PERCENTAGE,
     )
 }
 
 @PreviewLightDark
+@PreviewFontScale
+@Preview(locale = "fa", name = "Farsi")
 @Composable
-private fun RemainedWidgetComposePreviewTraffic() {
+private fun RemainedWidgetComposePreviewTrafficShort() {
     RemainedWidgetComposePreview(
-        DataDisplayMode.TRAFFIC
+        DataDisplayMode.TRAFFIC,
+        spellingMode = SpellingMode.Short,
+    )
+}
+
+@PreviewLightDark
+@PreviewFontScale
+@Preview(locale = "fa", name = "Farsi")
+@Composable
+private fun RemainedWidgetComposePreviewTrafficFull() {
+    RemainedWidgetComposePreview(
+        DataDisplayMode.TRAFFIC,
+        spellingMode = SpellingMode.Full,
     )
 }
 
 @Composable
 private fun RemainedWidgetComposePreview(
     dataDisplayMode: DataDisplayMode,
+    spellingMode: SpellingMode = SpellingMode.Short,
 ) {
     MyShatelMobileAppTheme {
         Surface {
             RemainedWidgetPreview(
                 dataDisplayMode = dataDisplayMode,
+                spellingMode = spellingMode,
             )
         }
     }

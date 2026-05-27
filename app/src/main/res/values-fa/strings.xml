@@ -21,8 +21,10 @@
     <string name="hide_password">پنهان کردن رمز عبور</string>
     <string name="show_password">نمایش رمز عبور</string>
     <string name="no_content_available">محتوایی در دسترس نیست</string>
-    <string name="gigabyte_short">گیگابایت</string>
-    <string name="megabyte_short">مگابایت</string>
+    <string name="gigabyte_short">گیگ</string>
+    <string name="gigabyte_full">گیگابایت</string>
+    <string name="megabyte_short">مگ</string>
+    <string name="megabyte_full">مگابایت</string>
     <string name="navigate_back">بازگشت</string>
     <string name="customize_widget">شخصی سازی ویجت</string>
     <string name="save">ذخیره</string>
@@ -30,4 +32,7 @@
     <string name="percentage">درصد</string>
     <string name="traffic">حجم</string>
     <string name="preview">پیش نمایش</string>
+    <string name="short_text">کوتاه</string>
+    <string name="full">کامل</string>
+    <string name="suffix_display_mode">نحوه نمایش پسوند</string>
 </resources>
