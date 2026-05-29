@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import me.amirkazemzade.netwidget.ui.theme.MyShatelDimensions
+import me.amirkazemzade.netwidget.ui.theme.NetWidgetDimensions
 
 @Composable
 fun FieldColumn(
@@ -18,7 +18,7 @@ fun FieldColumn(
         verticalArrangement = Arrangement.Center,
         modifier = modifier
             .fillMaxHeight()
-            .width(MyShatelDimensions.fieldWidth),
+            .width(NetWidgetDimensions.fieldWidth),
         content = content,
     )
 }

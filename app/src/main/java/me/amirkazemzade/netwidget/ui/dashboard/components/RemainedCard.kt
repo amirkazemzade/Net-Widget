@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.shimmer
 import me.amirkazemzade.netwidget.R
 import me.amirkazemzade.netwidget.domain.models.Remained
-import me.amirkazemzade.netwidget.ui.theme.MyShatelDimensions
+import me.amirkazemzade.netwidget.ui.theme.NetWidgetDimensions
 
 @Composable
 fun RemainedCard(
@@ -38,7 +38,7 @@ fun RemainedCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 0.dp, bottom = MyShatelDimensions.medium)
+                .padding(top = 0.dp, bottom = NetWidgetDimensions.medium)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -66,7 +66,7 @@ fun RemainedCard(
                 }
 
             }
-            Box(modifier = Modifier.height(MyShatelDimensions.medium))
+            Box(modifier = Modifier.height(NetWidgetDimensions.medium))
             DataCircularProgress(
                 remained = remained,
             )

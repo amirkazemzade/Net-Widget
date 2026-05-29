@@ -9,7 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import me.amirkazemzade.netwidget.ui.AuthStateViewModel
 import me.amirkazemzade.netwidget.ui.navigation.NavGraph
-import me.amirkazemzade.netwidget.ui.theme.MyShatelMobileAppTheme
+import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
 import me.amirkazemzade.netwidget.ui.widgets.remained.setRemainedWidgetPreview
 
 @AndroidEntryPoint
@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyShatelMobileAppTheme {
+            NetWidgetAppTheme {
                 NavGraph(authStateViewModel = authStateViewModel)
             }
         }

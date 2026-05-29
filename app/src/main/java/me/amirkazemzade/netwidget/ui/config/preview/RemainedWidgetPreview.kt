@@ -38,7 +38,7 @@ import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.SpellingMode
 import me.amirkazemzade.netwidget.domain.models.Traffic
 import me.amirkazemzade.netwidget.ui.config.defaults.WidgetConfigDefaults
-import me.amirkazemzade.netwidget.ui.theme.MyShatelMobileAppTheme
+import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
 import me.amirkazemzade.netwidget.ui.utils.textFitsInContainer
 import me.amirkazemzade.netwidget.ui.widgets.components.dynamicPercentagePadding
 
@@ -293,7 +293,7 @@ private fun RemainedWidgetComposePreview(
     dataDisplayMode: DataDisplayMode,
     spellingMode: SpellingMode = SpellingMode.Short,
 ) {
-    MyShatelMobileAppTheme {
+    NetWidgetAppTheme {
         Surface {
             RemainedWidgetPreview(
                 dataDisplayMode = dataDisplayMode,

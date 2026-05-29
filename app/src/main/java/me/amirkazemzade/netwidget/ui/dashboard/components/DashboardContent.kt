@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.Traffic
-import me.amirkazemzade.netwidget.ui.theme.MyShatelDimensions
-import me.amirkazemzade.netwidget.ui.theme.MyShatelMobileAppTheme
+import me.amirkazemzade.netwidget.ui.theme.NetWidgetDimensions
+import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -24,7 +24,7 @@ fun DashboardContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = MyShatelDimensions.medium, horizontal = MyShatelDimensions.large)
+            .padding(vertical = NetWidgetDimensions.medium, horizontal = NetWidgetDimensions.large)
     ) {
         RemainedCard(remained, onReloadClicked)
     }
@@ -33,7 +33,7 @@ fun DashboardContent(
 @PreviewLightDark
 @Composable
 private fun DashboardContentPreview() {
-    MyShatelMobileAppTheme {
+    NetWidgetAppTheme {
         Surface {
             DashboardContent(remainedMockValue)
         }
@@ -43,7 +43,7 @@ private fun DashboardContentPreview() {
 @PreviewLightDark
 @Composable
 private fun DashboardContentWithMBPreview() {
-    MyShatelMobileAppTheme {
+    NetWidgetAppTheme {
         Surface {
             DashboardContent(remainedMockLessThan1GValue)
         }
@@ -53,7 +53,7 @@ private fun DashboardContentWithMBPreview() {
 @PreviewLightDark
 @Composable
 private fun DashboardContentLoadingPreview() {
-    MyShatelMobileAppTheme {
+    NetWidgetAppTheme {
         Surface {
             DashboardContent(null)
         }

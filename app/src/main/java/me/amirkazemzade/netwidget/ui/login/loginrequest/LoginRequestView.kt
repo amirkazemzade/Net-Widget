@@ -13,9 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.ContentType
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentType
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.shape
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,8 +29,8 @@ import me.amirkazemzade.netwidget.domain.models.CaptchaBase64
 import me.amirkazemzade.netwidget.domain.models.Status
 import me.amirkazemzade.netwidget.ui.login.components.FieldButton
 import me.amirkazemzade.netwidget.ui.login.components.FieldColumn
-import me.amirkazemzade.netwidget.ui.theme.MyShatelDimensions
-import me.amirkazemzade.netwidget.ui.theme.MyShatelMobileAppTheme
+import me.amirkazemzade.netwidget.ui.theme.NetWidgetDimensions
+import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
 
 @Composable
 fun LoginRequestView(
@@ -59,12 +64,13 @@ fun LoginRequestView(
     val captchaFocusRequester = remember { FocusRequester() }
     val usernameRequiredMessage = stringResource(R.string.username_required)
     val captchaRequiredMessage = stringResource(R.string.enter_captcha)
+    val shape = MaterialTheme.shapes.large
 
     FieldColumn(modifier = modifier) {
         OutlinedTextField(
             value = state.username,
             label = { Text(stringResource(R.string.username)) },
-            shape = MaterialTheme.shapes.large,
+            shape = shape,
             onValueChange = state::setUsername,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
@@ -78,10 +84,16 @@ fun LoginRequestView(
                     Text(state.usernameError!!)
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(shape)
+                .semantics {
+                    contentType = ContentType.Username
+                    this.shape = shape
+                }
         )
 
-        Box(modifier = Modifier.height(MyShatelDimensions.medium))
+        Box(modifier = Modifier.height(NetWidgetDimensions.medium))
 
         CaptchaRow(
             captchaState = captchaState,
@@ -90,7 +102,7 @@ fun LoginRequestView(
         OutlinedTextField(
             value = state.captcha,
             label = { Text(stringResource(R.string.captcha)) },
-            shape = MaterialTheme.shapes.large,
+            shape = shape,
             onValueChange = state::setCaptcha,
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
@@ -117,7 +129,7 @@ fun LoginRequestView(
                 .focusRequester(captchaFocusRequester)
         )
 
-        Box(modifier = Modifier.height(MyShatelDimensions.large))
+        Box(modifier = Modifier.height(NetWidgetDimensions.large))
 
         FieldButton(
             text = stringResource(R.string.continue_action),
@@ -148,7 +160,7 @@ private fun callOnLoginRequest(
 @Preview
 @Composable
 fun LoginRequestViewPreview() {
-    MyShatelMobileAppTheme {
+    NetWidgetAppTheme {
         Surface {
             LoginRequestView(
                 captchaState = Status.Idle,

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.MyShatelMobileWidget" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.NetWidget" parent="android:Theme.Material.Light.NoActionBar" />
 
-    <style name="Theme.MyShatelMobileWidget.AppWidgetContainerParent" parent="Theme.AppCompat">
+    <style name="Theme.NetWidget.AppWidgetContainerParent" parent="Theme.AppCompat">
         <!-- Radius of the outer bound of widgets to make the rounded corners -->
         <item name="appWidgetRadius">16dp</item>
         <!--
@@ -13,7 +13,7 @@
         <item name="appWidgetInnerRadius">8dp</item>
     </style>
 
-    <style name="Theme.MyShatelMobileWidget.AppWidgetContainer" parent="Theme.MyShatelMobileWidget.AppWidgetContainerParent">
+    <style name="Theme.NetWidget.AppWidgetContainer" parent="Theme.NetWidget.AppWidgetContainerParent">
         <!-- Apply padding to avoid the content of the widget colliding with the rounded corners -->
         <item name="appWidgetPadding">16dp</item>
     </style>

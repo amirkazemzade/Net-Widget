@@ -1,18 +1,20 @@
 package me.amirkazemzade.netwidget.ui.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import me.amirkazemzade.netwidget.domain.models.LoginRequest
@@ -37,10 +39,14 @@ class LoginViewModel @Inject constructor(
     private val _event = MutableSharedFlow<LoginEvent>()
     val event = _event.asSharedFlow()
 
-    private val _fetchCaptcha = Channel<Unit>(capacity = Channel.CONFLATED)
+    private val _fetchCaptcha = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
     val captchaState = _fetchCaptcha
-        .consumeAsFlow().flatMapLatest { fetchCaptchaUseCase() }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(500), Status.Idle)
+        .onStart { emit(Unit)}
+        .flatMapLatest {
+            Log.d("LoginScreen", "Fetch captcha triggered.")
+            fetchCaptchaUseCase()
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), Status.Idle)
 
     private val _loginRequestState =
         MutableStateFlow<Status<LoginRequest>>(Status.Idle)
@@ -50,12 +56,10 @@ class LoginViewModel @Inject constructor(
         MutableStateFlow<Status<Unit>>(Status.Idle)
     val loginWithPasswordState = _loginWithPasswordState.asStateFlow()
 
-    init {
-        fetchCaptcha()
-    }
-
     fun fetchCaptcha() {
-        _fetchCaptcha.trySend(Unit)
+        viewModelScope.launch {
+            _fetchCaptcha.emit(Unit)
+        }
     }
 
     fun loginRequest(username: String, captchaResult: String) {

@@ -25,7 +25,7 @@ import com.valentinilk.shimmer.shimmer
 import me.amirkazemzade.netwidget.R
 import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.Traffic
-import me.amirkazemzade.netwidget.ui.theme.MyShatelMobileAppTheme
+import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
 import me.amirkazemzade.netwidget.ui.theme.primaryMuteColor
 
 @Composable
@@ -100,7 +100,7 @@ private fun formatRemained(
 @Composable
 fun DataCircularProgressPreview() {
     val remained = Remained(traffic = Traffic(amountInMb = 2048), percentage = 0.5f)
-    MyShatelMobileAppTheme {
+    NetWidgetAppTheme {
         Surface {
             Column {
                 DataCircularProgress(remained)
@@ -117,7 +117,7 @@ fun DataCircularProgressPreview() {
 @PreviewDynamicColors
 @Composable
 fun DataCircularProgressLoadingPreview() {
-    MyShatelMobileAppTheme {
+    NetWidgetAppTheme {
         Surface {
             Column {
                 DataCircularProgress(null)

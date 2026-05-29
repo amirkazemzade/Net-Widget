@@ -37,7 +37,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun MyShatelMobileAppTheme(
+fun NetWidgetAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
@@ -65,7 +65,7 @@ val ColorScheme.primaryMuteColor: Color
     get() = colorScheme.onPrimaryContainer.copy(0.5f)
 
 
-object MyShatelDimensions {
+object NetWidgetDimensions {
     val large = 32.dp
     val medium = 16.dp
     val small = 8.dp

@@ -15,7 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import me.amirkazemzade.netwidget.ui.config.WidgetConfigScreen
-import me.amirkazemzade.netwidget.ui.theme.MyShatelMobileAppTheme
+import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
 import me.amirkazemzade.netwidget.ui.widgets.remained.RemainedGlanceWidget1x4
 
 @AndroidEntryPoint
@@ -40,7 +40,7 @@ class WidgetConfigActivity : ComponentActivity() {
         }
 
         setContent {
-            MyShatelMobileAppTheme {
+            NetWidgetAppTheme {
                 val surface = MaterialTheme.colorScheme.surface
                 val window = this.window
 

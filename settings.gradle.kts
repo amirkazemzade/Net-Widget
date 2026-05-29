@@ -9,22 +9,23 @@ pluginManagement {
             }
         }
         maven { url = uri("https://hub.megan.ir/maven") }
-//        maven { url = uri("https://gradle.jamko.ir") }
-//        maven { url = uri("https://mirror-maven.runflare.com/maven2") }
-//        google {
-//            content {
-//                includeGroupByRegex("com\\.android.*")
-//                includeGroupByRegex("com\\.google.*")
-//                includeGroupByRegex("androidx.*")
-//            }
-//        }
-//        mavenCentral()
-//        gradlePluginPortal()
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
     }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        google()
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
         maven {
             url = uri("https://maven.myket.ir")
             metadataSources {
@@ -34,11 +35,6 @@ dependencyResolutionManagement {
             }
         }
         maven { url = uri("https://hub.megan.ir/maven") }
-//        maven { url = uri("https://gradle.jamko.ir") }
-//        maven { url = uri("https://mirror-maven.runflare.com/maven2") }
-//        google()
-//        mavenCentral()
-//        maven { url = uri("https://jitpack.io") }
 
     }
 }

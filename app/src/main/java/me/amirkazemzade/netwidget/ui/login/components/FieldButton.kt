@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import me.amirkazemzade.netwidget.R
-import me.amirkazemzade.netwidget.ui.theme.MyShatelDimensions
-import me.amirkazemzade.netwidget.ui.theme.MyShatelMobileAppTheme
+import me.amirkazemzade.netwidget.ui.theme.NetWidgetDimensions
+import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -32,7 +32,7 @@ fun FieldButton(
         onClick = onClick,
         shape = MaterialTheme.shapes.large,
         modifier = modifier
-            .height(MyShatelDimensions.fieldHeight)
+            .height(NetWidgetDimensions.fieldHeight)
             .fillMaxWidth()
     ) {
         if (isLoading) {
@@ -47,7 +47,7 @@ fun FieldButton(
 @Composable
 private fun PreviewFieldButton() {
     var isLoading by remember { mutableStateOf(false) }
-    MyShatelMobileAppTheme {
+    NetWidgetAppTheme {
         FieldButton(
             text = stringResource(R.string.continue_action), isLoading = isLoading, onClick = { isLoading = true })
     }
@@ -56,7 +56,7 @@ private fun PreviewFieldButton() {
 @Preview
 @Composable
 private fun PreviewFieldButtonDisabled() {
-    MyShatelMobileAppTheme {
+    NetWidgetAppTheme {
         FieldButton(
             enabled = false, text = stringResource(R.string.continue_action), onClick = { })
     }

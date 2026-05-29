@@ -18,7 +18,7 @@ import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.RequestStatus
 import me.amirkazemzade.netwidget.domain.models.Status
 import me.amirkazemzade.netwidget.domain.models.Traffic
-import me.amirkazemzade.netwidget.ui.theme.MyShatelMobileAppTheme
+import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
 
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -63,7 +63,7 @@ fun DashboardView(
 private fun DashboardScreenPreview() {
     var isLoggingOut by remember { mutableStateOf(false) }
 
-    MyShatelMobileAppTheme {
+    NetWidgetAppTheme {
         DashboardView(
             remainedState = remainedMockSuccessResponse,
             isLoggingOut = isLoggingOut,
@@ -75,7 +75,7 @@ private fun DashboardScreenPreview() {
 @PreviewLightDark
 @Composable
 private fun DashboardScreenLoggingOutPreview() {
-    MyShatelMobileAppTheme {
+    NetWidgetAppTheme {
         DashboardView(
             remainedState = remainedMockSuccessResponse,
             isLoggingOut = true,
@@ -87,7 +87,7 @@ private fun DashboardScreenLoggingOutPreview() {
 @PreviewLightDark
 @Composable
 private fun DashboardScreenErrorPreview() {
-    MyShatelMobileAppTheme {
+    NetWidgetAppTheme {
         DashboardView(
             remainedState = RequestStatus.Error("Error Message"),
             isLoggingOut = false,
