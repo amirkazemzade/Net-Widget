@@ -20,9 +20,11 @@ fun NavGraph(
     // Handles initial routing at startup based on auth, or when the auth state changes like login/logout
     LaunchedEffect(Unit) {
         authStateViewModel.authState.collect { route ->
-            navController.navigate(route) {
-                popUpTo(navController.graph.startDestinationId) {
-                    inclusive = true
+            if (navController.currentDestination?.route != route) {
+                navController.navigate(route) {
+                    popUpTo(navController.graph.startDestinationId) {
+                        inclusive = true
+                    }
                 }
             }
         }
