@@ -17,10 +17,11 @@ happy to review and merge your Pull Request.
 
 ## Known Issues
 
-* **Per App Language:** Widget's text might not have proper padding when the per app language is set
-  to a locale with a different direction of the system locale. For exmaple if the system is set to
+* **Per App Language:** Widget's text might not have proper padding when the per-app language is set
+  to a locale with a different direction of the system locale. For example if the system is set to
   `English` which is `LTR` and the app is set to `Farsi` which is `RTL`. This issue is due to
   inconsistent rtl application of glance widget api.
+* **Auto Fill:** autofill is implemented but the save suggestion of it is not working. Also, it does not keep the state of the autofill for the two-step login. 
 
 ## TODO
 
@@ -28,7 +29,7 @@ happy to review and merge your Pull Request.
 - [x] Neutral color scheme compatibility
     * The One UI is the issue
 
-- [ ] Google password manager select password cause crash
+- [x] Google password manager select password cause crash
 - [x] Login states are lost on configuration change
 - [x] Settings for widget
 - [x] Traffic amount version of widget
