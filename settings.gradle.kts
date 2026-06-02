@@ -1,14 +1,5 @@
 pluginManagement {
     repositories {
-        maven {
-            url = uri("https://maven.myket.ir")
-            metadataSources {
-                gradleMetadata()
-                mavenPom()
-                artifact()
-            }
-        }
-        maven { url = uri("https://hub.megan.ir/maven") }
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -18,6 +9,15 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+        maven {
+            url = uri("https://maven.myket.ir")
+            metadataSources {
+                gradleMetadata()
+                mavenPom()
+                artifact()
+            }
+        }
+        maven { url = uri("https://hub.megan.ir/maven") }
     }
 }
 dependencyResolutionManagement {
