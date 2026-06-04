@@ -26,9 +26,16 @@ Glance and Compose.
 | ![remained_widget_amount_short.png](docs/pictures/remained_widget_amount_short.png) |
 |  ![remained_widget_amount_full.png](docs/pictures/remained_widget_amount_full.png)  |
 
-|                    Home Screen                    |                        Configuration Screen                         |
-|:-------------------------------------------------:|:-------------------------------------------------------------------:|
-| ![home_screen.png](docs/pictures/home_screen.png) | ![configuration_screen.png](docs/pictures/configuration_screen.png) |
+<table>
+  <tr>
+    <th style="width:50%">Home Screen</th>
+    <th style="width:50%">Configuration Screen</th>
+  </tr>
+  <tr>
+    <td><img src="docs/pictures/home_screen.png" style="width:100%" alt="home screen image"></td>
+    <td><img src="docs/pictures/configuration_screen.png" style="width:100%" alt="configuration screen image"></td>
+  </tr>
+</table>
 
 ## 🚀 Getting Started
 
