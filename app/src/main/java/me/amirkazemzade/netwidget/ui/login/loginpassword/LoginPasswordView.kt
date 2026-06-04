@@ -9,7 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -31,7 +30,7 @@ import me.amirkazemzade.netwidget.R
 import me.amirkazemzade.netwidget.ui.login.components.FieldButton
 import me.amirkazemzade.netwidget.ui.login.components.FieldColumn
 import me.amirkazemzade.netwidget.ui.theme.NetWidgetDimensions
-import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
+import me.amirkazemzade.netwidget.ui.theme.PreviewTheme
 
 @Composable
 fun LoginPasswordView(
@@ -150,13 +149,11 @@ private fun callOnLogin(
 
 @PreviewLightDark
 @Composable
-private fun LoginPasswordViewPreview() {
-    NetWidgetAppTheme {
-        Surface {
-            LoginPasswordView(
-                username = "123456789",
-                onLogin = {}
-            )
-        }
+private fun LoginPasswordViewPreviewTheme() {
+    PreviewTheme {
+        LoginPasswordView(
+            username = "123456789",
+            onLogin = {}
+        )
     }
 }

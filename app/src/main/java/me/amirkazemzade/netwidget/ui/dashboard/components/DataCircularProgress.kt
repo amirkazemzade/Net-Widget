@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,7 +24,7 @@ import com.valentinilk.shimmer.shimmer
 import me.amirkazemzade.netwidget.R
 import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.Traffic
-import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
+import me.amirkazemzade.netwidget.ui.theme.PreviewTheme
 import me.amirkazemzade.netwidget.ui.theme.primaryMuteColor
 
 @Composable
@@ -34,6 +33,10 @@ fun DataCircularProgress(
     remained: Remained?,
 ) {
     val isLoading = remained == null
+    val primaryMuteColor = MaterialTheme.colorScheme.primaryMuteColor
+    val smallShape = MaterialTheme.shapes.small
+    val cornerShape = RoundedCornerShape(6.0.dp)
+
     Box(
         contentAlignment = Alignment.Center,
     ) {
@@ -58,8 +61,8 @@ fun DataCircularProgress(
                             .shimmer()
                             .padding(2.dp)
                             .background(
-                                color = MaterialTheme.colorScheme.primaryMuteColor,
-                                shape = MaterialTheme.shapes.small,
+                                color = primaryMuteColor,
+                                shape = smallShape,
                             )
                             .width(52.dp)
                     }
@@ -75,8 +78,8 @@ fun DataCircularProgress(
                             .shimmer()
                             .padding(2.dp)
                             .background(
-                                color = MaterialTheme.colorScheme.primaryMuteColor,
-                                shape = RoundedCornerShape(6.0.dp),
+                                color = primaryMuteColor,
+                                shape = cornerShape,
                             )
                             .width(32.dp)
                     }
@@ -95,36 +98,34 @@ private fun formatRemained(
     else if (remained.traffic.amountInMb > 1024) "%.2f".format(remained.traffic.toGB()) to gigabyteUnit
     else remained.traffic.toMB().toString() to megabyteUnit
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @PreviewLightDark
 @PreviewDynamicColors
 @Composable
-fun DataCircularProgressPreview() {
+fun DataCircularProgressPreviewTheme() {
     val remained = Remained(traffic = Traffic(amountInMb = 2048), percentage = 0.5f)
-    NetWidgetAppTheme {
-        Surface {
-            Column {
+    PreviewTheme {
+        Column {
+            DataCircularProgress(remained)
+            Box(modifier = Modifier.height(4.dp))
+            Card {
                 DataCircularProgress(remained)
-                Box(modifier = Modifier.height(4.dp))
-                Card {
-                    DataCircularProgress(remained)
-                }
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @PreviewLightDark
 @PreviewDynamicColors
 @Composable
-fun DataCircularProgressLoadingPreview() {
-    NetWidgetAppTheme {
-        Surface {
-            Column {
+fun DataCircularProgressLoadingPreviewTheme() {
+    PreviewTheme {
+        Column {
+            DataCircularProgress(null)
+            Box(modifier = Modifier.height(4.dp))
+            Card {
                 DataCircularProgress(null)
-                Box(modifier = Modifier.height(4.dp))
-                Card {
-                    DataCircularProgress(null)
-                }
             }
         }
     }

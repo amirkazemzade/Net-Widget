@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import me.amirkazemzade.netwidget.R
 import me.amirkazemzade.netwidget.ui.theme.NetWidgetDimensions
-import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
+import me.amirkazemzade.netwidget.ui.theme.PreviewTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -45,9 +45,9 @@ fun FieldButton(
 
 @Preview
 @Composable
-private fun PreviewFieldButton() {
+private fun PreviewThemeFieldButton() {
     var isLoading by remember { mutableStateOf(false) }
-    NetWidgetAppTheme {
+    PreviewTheme {
         FieldButton(
             text = stringResource(R.string.continue_action), isLoading = isLoading, onClick = { isLoading = true })
     }
@@ -55,8 +55,8 @@ private fun PreviewFieldButton() {
 
 @Preview
 @Composable
-private fun PreviewFieldButtonDisabled() {
-    NetWidgetAppTheme {
+private fun PreviewThemeFieldButtonDisabled() {
+    PreviewTheme {
         FieldButton(
             enabled = false, text = stringResource(R.string.continue_action), onClick = { })
     }

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,7 +37,7 @@ import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.SpellingMode
 import me.amirkazemzade.netwidget.domain.models.Traffic
 import me.amirkazemzade.netwidget.ui.config.defaults.WidgetConfigDefaults
-import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
+import me.amirkazemzade.netwidget.ui.theme.PreviewTheme
 import me.amirkazemzade.netwidget.ui.utils.textFitsInContainer
 import me.amirkazemzade.netwidget.ui.widgets.components.dynamicPercentagePadding
 
@@ -293,12 +292,10 @@ private fun RemainedWidgetComposePreview(
     dataDisplayMode: DataDisplayMode,
     spellingMode: SpellingMode = SpellingMode.Short,
 ) {
-    NetWidgetAppTheme {
-        Surface {
-            RemainedWidgetPreview(
-                dataDisplayMode = dataDisplayMode,
-                spellingMode = spellingMode,
-            )
-        }
+    PreviewTheme {
+        RemainedWidgetPreview(
+            dataDisplayMode = dataDisplayMode,
+            spellingMode = spellingMode,
+        )
     }
 }

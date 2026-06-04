@@ -7,7 +7,6 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -30,7 +29,7 @@ import me.amirkazemzade.netwidget.domain.models.Status
 import me.amirkazemzade.netwidget.ui.login.components.FieldButton
 import me.amirkazemzade.netwidget.ui.login.components.FieldColumn
 import me.amirkazemzade.netwidget.ui.theme.NetWidgetDimensions
-import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
+import me.amirkazemzade.netwidget.ui.theme.PreviewTheme
 
 @Composable
 fun LoginRequestView(
@@ -159,15 +158,13 @@ private fun callOnLoginRequest(
 
 @Preview
 @Composable
-fun LoginRequestViewPreview() {
-    NetWidgetAppTheme {
-        Surface {
-            LoginRequestView(
-                captchaState = Status.Idle,
-                onFetchCaptcha = {},
-                onLoginRequest = { _, _ -> },
-                isLoading = false
-            )
-        }
+fun LoginRequestViewPreviewTheme() {
+    PreviewTheme {
+        LoginRequestView(
+            captchaState = Status.Idle,
+            onFetchCaptcha = {},
+            onLoginRequest = { _, _ -> },
+            isLoading = false
+        )
     }
 }

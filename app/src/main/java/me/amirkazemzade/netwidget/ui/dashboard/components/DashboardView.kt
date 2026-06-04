@@ -18,7 +18,7 @@ import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.RequestStatus
 import me.amirkazemzade.netwidget.domain.models.Status
 import me.amirkazemzade.netwidget.domain.models.Traffic
-import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
+import me.amirkazemzade.netwidget.ui.theme.PreviewTheme
 
 @Composable
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
@@ -60,10 +60,10 @@ fun DashboardView(
 
 @PreviewLightDark
 @Composable
-private fun DashboardScreenPreview() {
+private fun DashboardScreenPreviewTheme() {
     var isLoggingOut by remember { mutableStateOf(false) }
 
-    NetWidgetAppTheme {
+    PreviewTheme {
         DashboardView(
             remainedState = remainedMockSuccessResponse,
             isLoggingOut = isLoggingOut,
@@ -74,8 +74,8 @@ private fun DashboardScreenPreview() {
 
 @PreviewLightDark
 @Composable
-private fun DashboardScreenLoggingOutPreview() {
-    NetWidgetAppTheme {
+private fun DashboardScreenLoggingOutPreviewTheme() {
+    PreviewTheme {
         DashboardView(
             remainedState = remainedMockSuccessResponse,
             isLoggingOut = true,
@@ -86,8 +86,8 @@ private fun DashboardScreenLoggingOutPreview() {
 
 @PreviewLightDark
 @Composable
-private fun DashboardScreenErrorPreview() {
-    NetWidgetAppTheme {
+private fun DashboardScreenErrorPreviewTheme() {
+    PreviewTheme {
         DashboardView(
             remainedState = RequestStatus.Error("Error Message"),
             isLoggingOut = false,

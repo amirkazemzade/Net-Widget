@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,7 +11,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.Traffic
 import me.amirkazemzade.netwidget.ui.theme.NetWidgetDimensions
-import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
+import me.amirkazemzade.netwidget.ui.theme.PreviewTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -32,31 +31,25 @@ fun DashboardContent(
 
 @PreviewLightDark
 @Composable
-private fun DashboardContentPreview() {
-    NetWidgetAppTheme {
-        Surface {
-            DashboardContent(remainedMockValue)
-        }
+private fun DashboardContentPreviewTheme() {
+    PreviewTheme {
+        DashboardContent(remainedMockValue)
     }
 }
 
 @PreviewLightDark
 @Composable
-private fun DashboardContentWithMBPreview() {
-    NetWidgetAppTheme {
-        Surface {
-            DashboardContent(remainedMockLessThan1GValue)
-        }
+private fun DashboardContentWithMBPreviewTheme() {
+    PreviewTheme {
+        DashboardContent(remainedMockLessThan1GValue)
     }
 }
 
 @PreviewLightDark
 @Composable
-private fun DashboardContentLoadingPreview() {
-    NetWidgetAppTheme {
-        Surface {
-            DashboardContent(null)
-        }
+private fun DashboardContentLoadingPreviewTheme() {
+    PreviewTheme {
+        DashboardContent(null)
     }
 }
 

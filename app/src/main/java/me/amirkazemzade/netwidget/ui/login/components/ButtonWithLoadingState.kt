@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import me.amirkazemzade.netwidget.R
+import me.amirkazemzade.netwidget.ui.theme.PreviewTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -59,23 +60,27 @@ fun ButtonWithLoadingState(
 
 @Preview(name = "Normal State", showBackground = true)
 @Composable
-fun ButtonWithLoadingStatePreview() {
-    ButtonWithLoadingState(onClick = {}, isLoading = false) {
-        Text(stringResource(R.string.continue_action))
+fun ButtonWithLoadingStatePreviewTheme() {
+    PreviewTheme {
+        ButtonWithLoadingState(onClick = {}, isLoading = false) {
+            Text(stringResource(R.string.continue_action))
+        }
     }
 }
 
 @Preview(name = "Loading State", showBackground = true)
 @Composable
-fun ButtonWithLoadingStateLoadingPreview() {
-    ButtonWithLoadingState(onClick = {}, isLoading = true) {
-        Text(stringResource(R.string.continue_action))
+fun ButtonWithLoadingStateLoadingPreviewTheme() {
+    PreviewTheme {
+        ButtonWithLoadingState(onClick = {}, isLoading = true) {
+            Text(stringResource(R.string.continue_action))
+        }
     }
 }
 
 @Preview(name = "Interactive", showBackground = true)
 @Composable
-fun ButtonWithLoadingStateInteractivePreview() {
+fun ButtonWithLoadingStateInteractivePreviewTheme() {
 
     val infiniteTransition = rememberInfiniteTransition("infiniteTransition")
     val animationState by infiniteTransition.animateFloat(
@@ -84,10 +89,12 @@ fun ButtonWithLoadingStateInteractivePreview() {
         animationSpec = infiniteRepeatable(animation = tween(5000), repeatMode = RepeatMode.Reverse)
     )
 
-    ButtonWithLoadingState(
-        onClick = {},
-        isLoading = animationState >= 0.5f,
-    ) {
-        Text(stringResource(R.string.continue_action))
+    PreviewTheme {
+        ButtonWithLoadingState(
+            onClick = {},
+            isLoading = animationState >= 0.5f,
+        ) {
+            Text(stringResource(R.string.continue_action))
+        }
     }
 }

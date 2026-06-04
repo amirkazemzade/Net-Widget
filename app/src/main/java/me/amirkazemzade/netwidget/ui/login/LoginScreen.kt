@@ -20,7 +20,7 @@ import me.amirkazemzade.netwidget.domain.models.RequestStatus
 import me.amirkazemzade.netwidget.ui.login.loginpassword.LoginPasswordView
 import me.amirkazemzade.netwidget.ui.login.loginrequest.LoginEvent
 import me.amirkazemzade.netwidget.ui.login.loginrequest.LoginRequestView
-import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
+import me.amirkazemzade.netwidget.ui.theme.PreviewTheme
 
 @Composable
 fun LoginScreen(
@@ -101,8 +101,8 @@ fun LoginScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun LoginViewPreview() {
-    NetWidgetAppTheme {
+fun LoginViewPreviewTheme() {
+    PreviewTheme {
         LoginScreen()
     }
 }

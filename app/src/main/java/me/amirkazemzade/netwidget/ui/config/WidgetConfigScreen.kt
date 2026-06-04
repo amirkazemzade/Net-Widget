@@ -39,7 +39,7 @@ import me.amirkazemzade.netwidget.ui.config.components.SuffixSpellingModeCard
 import me.amirkazemzade.netwidget.ui.config.components.WidgetConfigTopAppBar
 import me.amirkazemzade.netwidget.ui.config.components.WidgetPreviewBox
 import me.amirkazemzade.netwidget.ui.config.defaults.WidgetConfigDefaults
-import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
+import me.amirkazemzade.netwidget.ui.theme.PreviewTheme
 import kotlin.math.roundToLong
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -218,8 +218,8 @@ private fun WidgetConfigContent(
 @PreviewDynamicColors
 @Preview("Farsi", locale = "fa")
 @Composable
-private fun WidgetConfigScreenPreview() {
-    NetWidgetAppTheme {
+private fun WidgetConfigScreenPreviewTheme() {
+    PreviewTheme {
         WidgetConfigContent(
             dataDisplayMode = DataDisplayMode.TRAFFIC,
             onSelectDisplayMode = {},

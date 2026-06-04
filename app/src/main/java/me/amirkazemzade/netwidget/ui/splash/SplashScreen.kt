@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import me.amirkazemzade.netwidget.ui.theme.PreviewTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -28,6 +29,8 @@ fun SplashScreen() {
 
 @Preview
 @Composable
-private fun PreviewSplashScreen() {
-    SplashScreen()
+private fun PreviewThemeSplashScreen() {
+    PreviewTheme {
+        SplashScreen()
+    }
 }

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +23,7 @@ import me.amirkazemzade.netwidget.R
 import me.amirkazemzade.netwidget.domain.models.CaptchaBase64
 import me.amirkazemzade.netwidget.domain.models.RequestStatus
 import me.amirkazemzade.netwidget.domain.models.Status
-import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
+import me.amirkazemzade.netwidget.ui.theme.PreviewTheme
 
 @Composable
 fun CaptchaRow(
@@ -60,14 +59,12 @@ fun CaptchaRow(
 @PreviewLightDark
 @Preview(name = "Farsi", locale = "fa")
 @Composable
-fun CaptchaRowIdlePreview() {
-    NetWidgetAppTheme {
-        Surface {
-            CaptchaRow(
-                captchaState = Status.Idle,
-                onFetchCaptcha = {}
-            )
-        }
+fun CaptchaRowIdlePreviewTheme() {
+    PreviewTheme {
+        CaptchaRow(
+            captchaState = Status.Idle,
+            onFetchCaptcha = {}
+        )
     }
 }
 
@@ -75,14 +72,12 @@ fun CaptchaRowIdlePreview() {
 @PreviewLightDark
 @Preview(name = "Farsi", locale = "fa")
 @Composable
-fun CaptchaRowLoadingPreview() {
-    NetWidgetAppTheme {
-        Surface {
-            CaptchaRow(
-                captchaState = RequestStatus.Loading,
-                onFetchCaptcha = {}
-            )
-        }
+fun CaptchaRowLoadingPreviewTheme() {
+    PreviewTheme {
+        CaptchaRow(
+            captchaState = RequestStatus.Loading,
+            onFetchCaptcha = {}
+        )
     }
 }
 
@@ -90,35 +85,31 @@ fun CaptchaRowLoadingPreview() {
 @PreviewLightDark
 @Preview(name = "Farsi", locale = "fa")
 @Composable
-fun CaptchaRowSuccessPreview() {
-    NetWidgetAppTheme {
-        Surface {
-            CaptchaRow(
-                // Red dot 1x1 pixel base64
-                captchaState = RequestStatus.Success(
-                    CaptchaBase64(
-                        """
+fun CaptchaRowSuccessPreviewTheme() {
+    PreviewTheme {
+        CaptchaRow(
+            // Red dot 1x1 pixel base64
+            captchaState = RequestStatus.Success(
+                CaptchaBase64(
+                    """
                              iVBORw0KGgoAAAANSUhEUgAAAFAAAABBCAIAAADJ+bTEAAABZklEQVR4nO2ZUQ6DIAyGddl9uP8xehKvsAcT4xBKqQjlt9/TkiH2o1JA123bljfxGR1Ab1wYHRdGx4XRcWF0XBgdF0bHhdFxYXRcGB0XRseF0XFhdL7CdiGE4zcRPRNMD1b+U8vZ80pn8ygY3d2zGeZV5yUt3NbW1HTQF63hoetIZPiaXptuIQRFYOUM27RVUxAGs12KwnZqdatIyhuP61Rpsh6OQrTTspPnCEXdet1eOr21rE3pPsx3HgQ+UUzPbTIs74WIxs7h2lHOzuFDI9fjXLXqQLMsdc5q20VBeh6W3C/3V/PDAxGd+6yq1VyGZ9lUV5EVNmIrfJ7lpSstbMSWQR2P6Y1HVbkSJjkhbD+9O7qo7J6HFfs2ySWxsNlzQnLc27/xmCi9wgv/Dg92Zu/NcsW05zJsxLZIVZwWl6VIoHbc+fbZ87CFpWhPtTASYePCtyU8LD7Sj+LC6LgwOi6Mjguj8wNf+KaAp1GZPgAAAABJRU5ErkJggg==
                          """
-                            .trimIndent()
-                    )
-                ),
-                onFetchCaptcha = {}
-            )
-        }
+                        .trimIndent()
+                )
+            ),
+            onFetchCaptcha = {}
+        )
     }
 }
 
 @PreviewLightDark
 @Preview(name = "Farsi", locale = "fa")
 @Composable
-fun CaptchaRowErrorPreview() {
-    NetWidgetAppTheme {
-        Surface {
-            CaptchaRow(
-                captchaState = RequestStatus.Error("Error fetching captcha"),
-                onFetchCaptcha = {}
-            )
-        }
+fun CaptchaRowErrorPreviewTheme() {
+    PreviewTheme {
+        CaptchaRow(
+            captchaState = RequestStatus.Error("Error fetching captcha"),
+            onFetchCaptcha = {}
+        )
     }
 }
