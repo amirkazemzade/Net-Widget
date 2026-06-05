@@ -24,15 +24,6 @@ android {
         buildFeatures.buildConfig = true
     }
 
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
-            isUniversalApk = true
-        }
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -55,6 +46,38 @@ android {
     androidResources {
         @Suppress("UnstableApiUsage")
         generateLocaleConfig = true
+    }
+
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+            isUniversalApk = true
+        }
+    }
+
+    androidComponents {
+        onVariants { variant ->
+            if (variant.name == "release") {
+                val appName = "NetWidget" // Put your actual app name here
+                val versionName = android.defaultConfig.versionName ?: "x.x.x"
+
+                variant.outputs.forEach { output ->
+                    // 1. Cast the output to an absolute implementation that contains outputFileName
+                    if (output is com.android.build.api.variant.impl.VariantOutputImpl) {
+
+                        // 2. Safely extract the ABI name
+                        val abi = output.filters.find {
+                            it.filterType == com.android.build.api.variant.FilterConfiguration.FilterType.ABI
+                        }?.identifier ?: "universal"
+
+                        // 3. Set the clean filename using the lazy Property .set() API
+                        output.outputFileName.set("$appName-v$versionName-$abi.apk")
+                    }
+                }
+            }
+        }
     }
 }
 

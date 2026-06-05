@@ -44,6 +44,15 @@ jobs:
         env:
           BUILD_TOOLS_VERSION: "34.0.0"
 
+      - name: Clean up and Prepare Artifacts
+        run: |
+          cd app/build/outputs/apk/release
+          for file in *-signed.apk; do
+            mv "$file" "${file/-signed.apk/.apk}"
+          done
+          rm -f *aligned.apk
+          ls -la
+
       - name: Create Release and Upload APKs
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
