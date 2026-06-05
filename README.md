@@ -49,7 +49,7 @@ Glance and Compose.
 #### 📥 Download
 
 You can download the latest stable APK from
-the [Releases](https://github.com/amirkazemzade/NetWidget/releases) page and install it directly on
+the [Releases](https://github.com/amirkazemzade/Net-Widget/releases) page and install it directly on
 your Android device.
 
 #### 🏗️ Build from Source
