@@ -10,6 +10,7 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +25,7 @@ import me.amirkazemzade.netwidget.domain.usecases.LogoutUseCase
 import me.amirkazemzade.netwidget.presentation.RemainedWidgetUpdateWorker
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.minutes
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
@@ -32,14 +34,29 @@ class DashboardViewModel @Inject constructor(
     private val remainedLocalDataSource: RemainedLocalDataSource,
 ) : ViewModel() {
 
-    private val _logoutState = MutableStateFlow<Status<Unit>>(Status.Idle)
-    val logoutState = _logoutState.asStateFlow()
+    companion object {
+        private const val AUTO_REFRESH_INTERVAL_MINUTES = 15L
+    }
 
+    private val _logoutState = MutableStateFlow<Status<Unit>>(Status.Idle)
+
+    val logoutState = _logoutState.asStateFlow()
     private val _remainedState = MutableStateFlow<Status<Remained>>(Status.Idle)
+
     val remainedState: StateFlow<Status<Remained>> = _remainedState.asStateFlow()
 
     init {
         refreshRemained()
+        startAutoRefresh()
+    }
+
+    private fun startAutoRefresh() {
+        viewModelScope.launch {
+            while (true) {
+                delay(AUTO_REFRESH_INTERVAL_MINUTES.minutes)
+                refreshRemained(showLoading = false)
+            }
+        }
     }
 
     fun logout(context: Context) {
@@ -54,9 +71,12 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    fun refreshRemained() {
+    fun refreshRemained(showLoading: Boolean = true) {
         viewModelScope.launch {
             fetchRemainedUseCase().collect { newState ->
+                if (newState is RequestStatus.Loading && !showLoading) {
+                    return@collect
+                }
                 _remainedState.update { newState }
                 if (newState is RequestStatus.Success) {
                     updateWidgets(newState.data)
@@ -73,7 +93,7 @@ class DashboardViewModel @Inject constructor(
             .build()
 
         val workRequest = PeriodicWorkRequestBuilder<RemainedWidgetUpdateWorker>(
-            repeatInterval = 15,
+            repeatInterval = AUTO_REFRESH_INTERVAL_MINUTES,
             repeatIntervalTimeUnit = TimeUnit.MINUTES
         )
             .setConstraints(constraints)
