@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.NetWidget" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.NetWidget" parent="Theme.Material3.DayNight.NoActionBar" />
 
     <style name="Theme.NetWidget.AppWidgetContainerParent" parent="Theme.AppCompat">
         <!-- Radius of the outer bound of widgets to make the rounded corners -->
