@@ -31,8 +31,9 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         id: check_version
         run: |
-          # Extract tag version (removes 'refs/tags/v' or 'refs/tags/' prefix)
+          # Extract tag version (removes 'refs/tags/' prefix)
           TAG_VERSION="${GITHUB_REF#refs/tags/}"
+          # Remove the 'v' prefix for comparison
           TAG_VERSION="${TAG_VERSION#v}"
 
           # Extract versionName from app/build.gradle (.kts)
@@ -43,11 +44,14 @@ jobs:
             APP_VERSION=$(grep -E 'versionName\s*=?\s*["'\'']' app/build.gradle* | head -n 1 | sed -E 's/.*versionName\s*=?\s*["'\''"]([^"'\'']+)["'\''"].*/\1/')
           fi
 
-          echo "Git Tag Version: $TAG_VERSION"
-          echo "App Version: $APP_VERSION"
+          echo "Git Tag Version (stripped): $TAG_VERSION"
+          echo "App Version (extracted): $APP_VERSION"
 
           if [ "$TAG_VERSION" != "$APP_VERSION" ]; then
-            echo "::error::Tag version ($TAG_VERSION) does not match app versionName ($APP_VERSION)!"
+            echo "::error::Version match failed!"
+            echo "::error::If the tag is correct (v$TAG_VERSION), the App versionName must be exactly: $TAG_VERSION"
+            echo "::error::If the App version is correct ($APP_VERSION), the Git tag should have been: v$APP_VERSION"
+            echo "::error::Actual comparison -> Git Tag provided: '$TAG_VERSION' | App version found: '$APP_VERSION'"
             echo "match=false" >> $GITHUB_OUTPUT
             exit 1
           else
