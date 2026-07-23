@@ -35,18 +35,19 @@ jobs:
           TAG_VERSION="${GITHUB_REF#refs/tags/}"
           # Remove the 'v' prefix for comparison
           TAG_VERSION="${TAG_VERSION#v}"
-
-          # Extract versionName from app/build.gradle (.kts)
-          APP_VERSION=$(./gradlew -q :app:printVersionName 2>/dev/null || ./gradlew -q printVersionName 2>/dev/null)
-
-          # Fallback regex extraction if no Gradle task exists
+          
+          # Added '|| true' so the script doesn't crash if the Gradle task is missing
+          APP_VERSION=$(./gradlew -q :app:printVersionName 2>/dev/null || ./gradlew -q printVersionName 2>/dev/null || true)
+          
+          # Fallback regex extraction using PCRE
           if [ -z "$APP_VERSION" ]; then
-            APP_VERSION=$(grep -E 'versionName\s*=?\s*["'\'']' app/build.gradle* | head -n 1 | sed -E 's/.*versionName\s*=?\s*["'\''"]([^"'\'']+)["'\''"].*/\1/')
+            # Added '|| true' here as well so a failed grep doesn't crash the script
+            APP_VERSION=$(grep -h -m 1 -oP 'versionName\s*=?\s*["\047]\K[^"\047]+' app/build.gradle* 2>/dev/null || true)
           fi
-
+          
           echo "Git Tag Version (stripped): $TAG_VERSION"
           echo "App Version (extracted): $APP_VERSION"
-
+          
           if [ "$TAG_VERSION" != "$APP_VERSION" ]; then
             echo "::error::Version match failed!"
             echo "::error::If the tag is correct (v$TAG_VERSION), the App versionName must be exactly: $TAG_VERSION"
