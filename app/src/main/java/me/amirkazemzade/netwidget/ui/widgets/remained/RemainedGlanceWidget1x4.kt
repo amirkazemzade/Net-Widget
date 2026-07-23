@@ -19,6 +19,7 @@ import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
@@ -60,10 +61,12 @@ class RemainedGlanceWidget1x4 : GlanceAppWidget() {
         get() = SizeMode.Exact
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
+        val appWidgetId: Int = GlanceAppWidgetManager(context).getAppWidgetId(id)
+
         val dataSource = RemainedLocalDataSource(context)
-        val dataDisplayModeFlow = dataSource.dataDisplayMode
+        val dataDisplayModeFlow = dataSource.getDataDisplayMode(appWidgetId)
                 .map { it ?: DataDisplayMode.PERCENTAGE }
-        val spellingModeFlow = dataSource.spellingMode
+        val spellingModeFlow = dataSource.getSpellingMode(appWidgetId)
             .map { it ?: SpellingMode.Short }
 
         provideContent {

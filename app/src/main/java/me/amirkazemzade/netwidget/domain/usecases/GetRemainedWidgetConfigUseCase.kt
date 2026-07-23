@@ -13,10 +13,10 @@ import javax.inject.Singleton
 class GetRemainedWidgetConfigUseCase @Inject constructor(
     private val remainedLocalDataSource: RemainedLocalDataSource,
 ) {
-    operator fun invoke(): Flow<RemainedWidgetConfig> {
+    operator fun invoke(appWidgetId: Int): Flow<RemainedWidgetConfig> {
         return combine(
-            flow = remainedLocalDataSource.dataDisplayMode,
-            flow2 = remainedLocalDataSource.spellingMode,
+            flow = remainedLocalDataSource.getDataDisplayMode(appWidgetId),
+            flow2 = remainedLocalDataSource.getSpellingMode(appWidgetId),
         ) { displayMode, spellingMode ->
             RemainedWidgetConfig(
                 dataDisplayMode = displayMode ?: DataDisplayMode.PERCENTAGE,

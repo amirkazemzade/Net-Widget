@@ -52,6 +52,7 @@ class WidgetConfigActivity : ComponentActivity() {
                 }
 
                 WidgetConfigScreen(
+                    appWidgetId= appWidgetId,
                     showNavIcon = false,
                     onNavigateBack = {
                         finish()
