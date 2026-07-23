@@ -2,6 +2,9 @@ package me.amirkazemzade.netwidget.ui.config
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,13 +17,18 @@ import me.amirkazemzade.netwidget.domain.models.RequestStatus
 import me.amirkazemzade.netwidget.domain.models.SpellingMode
 import me.amirkazemzade.netwidget.domain.usecases.GetRemainedWidgetConfigUseCase
 import me.amirkazemzade.netwidget.domain.usecases.SetRemainedWidgetConfigUseCase
-import javax.inject.Inject
 
-@HiltViewModel
-class WidgetConfigViewModel @Inject constructor(
-    getRemainedWidgetConfigUseCase: GetRemainedWidgetConfigUseCase,
+@HiltViewModel(assistedFactory = WidgetConfigViewModel.Factory::class)
+class WidgetConfigViewModel @AssistedInject constructor(
+    @Assisted private val appWidgetId: Int,
+    private val getRemainedWidgetConfigUseCase: GetRemainedWidgetConfigUseCase,
     private val setRemainedWidgetConfigUseCase: SetRemainedWidgetConfigUseCase,
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(appWidgetId: Int): WidgetConfigViewModel
+    }
 
     private val _event = MutableSharedFlow<WidgetConfigEvent>()
     val event = _event.asSharedFlow()
@@ -30,7 +38,7 @@ class WidgetConfigViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getRemainedWidgetConfigUseCase()
+            getRemainedWidgetConfigUseCase(appWidgetId)
                 .collect { config ->
                     _currentConfigState.update {
                         it.copy(
@@ -67,6 +75,7 @@ class WidgetConfigViewModel @Inject constructor(
     fun save() {
         viewModelScope.launch {
             setRemainedWidgetConfigUseCase(
+                widgetId = appWidgetId,
                 config = currentConfigState.value.remainedWidgetConfig
             ).collect { newStatus ->
                 when (newStatus) {

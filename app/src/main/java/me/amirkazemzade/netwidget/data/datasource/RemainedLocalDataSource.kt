@@ -11,10 +11,10 @@ import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import me.amirkazemzade.netwidget.domain.models.Remained
-import me.amirkazemzade.netwidget.domain.models.Traffic
 import me.amirkazemzade.netwidget.domain.models.DataDisplayMode
+import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.SpellingMode
+import me.amirkazemzade.netwidget.domain.models.Traffic
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -30,21 +30,24 @@ class RemainedLocalDataSource @Inject constructor(
 
         val TRAFFIC_IN_MB_KEY = longPreferencesKey("traffic_in_mb")
         val PERCENTAGE_KEY = floatPreferencesKey("percentage")
-
-        val DATA_DISPLAY_MODE = stringPreferencesKey("data_display_mode")
-        val SPELLING_MODE = stringPreferencesKey("spelling_mode")
     }
+
+    fun dataDisplayModeKey(widgetId: Int) = stringPreferencesKey("data_display_mode_$widgetId")
+
+    fun spellingModeKey(widgetId: Int) = stringPreferencesKey("spelling_mode_$widgetId")
 
     val remainedData: Flow<Remained?> = dataStore.data.map { preferences ->
         preferences.toRemained()
     }
 
-    val dataDisplayMode: Flow<DataDisplayMode?> = dataStore.data.map { preferences ->
-        preferences.toDataDisplayMode()
-    }
+    fun getDataDisplayMode(widgetId: Int): Flow<DataDisplayMode?> =
+        dataStore.data.map { preferences ->
+            preferences.toDataDisplayMode(widgetId)
+        }
 
-    val spellingMode: Flow<SpellingMode?> = dataStore.data.map { preferences ->
-        preferences.toSpellingMode()
+
+    fun getSpellingMode(widgetId: Int): Flow<SpellingMode?> = dataStore.data.map { preferences ->
+        preferences.toSpellingMode(widgetId)
     }
 
     suspend fun setRemained(remained: Remained) {
@@ -54,15 +57,15 @@ class RemainedLocalDataSource @Inject constructor(
         }
     }
 
-    suspend fun setDataDisplayMode(mode: DataDisplayMode) {
+    suspend fun setDataDisplayMode(widgetId: Int, mode: DataDisplayMode) {
         dataStore.edit { preferences ->
-            preferences[DATA_DISPLAY_MODE] = mode.name
+            preferences[dataDisplayModeKey(widgetId)] = mode.name
         }
     }
 
-    suspend fun setSpellingMode(mode: SpellingMode) {
+    suspend fun setSpellingMode(widgetId: Int, mode: SpellingMode) {
         dataStore.edit { preferences ->
-            preferences[SPELLING_MODE] = mode.name
+            preferences[spellingModeKey(widgetId = widgetId)] = mode.name
         }
     }
 
@@ -77,13 +80,13 @@ class RemainedLocalDataSource @Inject constructor(
         )
     }
 
-    private fun Preferences.toDataDisplayMode(): DataDisplayMode? {
-        val rawValue = this[DATA_DISPLAY_MODE] ?: return null
+    private fun Preferences.toDataDisplayMode(widgetId: Int): DataDisplayMode? {
+        val rawValue = this[dataDisplayModeKey(widgetId)] ?: return null
         return DataDisplayMode.valueOfOrNull(rawValue)
     }
 
-    private fun Preferences.toSpellingMode(): SpellingMode? {
-        val rawValue = this[SPELLING_MODE] ?: return null
+    private fun Preferences.toSpellingMode(widgetId: Int): SpellingMode? {
+        val rawValue = this[spellingModeKey(widgetId)] ?: return null
         return SpellingMode.valueOfOrNull(rawValue)
     }
 }

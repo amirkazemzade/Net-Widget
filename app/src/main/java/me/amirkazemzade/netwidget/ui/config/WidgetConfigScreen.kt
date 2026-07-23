@@ -45,10 +45,14 @@ import kotlin.math.roundToLong
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun WidgetConfigScreen(
+    appWidgetId: Int,
     onUpdateWidget: () -> Unit,
     onNavigateBack: () -> Unit,
     showNavIcon: Boolean = false,
-    viewModel: WidgetConfigViewModel = hiltViewModel(),
+    viewModel: WidgetConfigViewModel =
+        hiltViewModel<WidgetConfigViewModel, WidgetConfigViewModel.Factory> { factory ->
+            factory.create(appWidgetId)
+        },
 ) {
     val configState by viewModel.currentConfigState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -92,8 +96,7 @@ fun WidgetConfigScreen(
         },
         onPercentageChanged = { percentage ->
             remainedPercentage = percentage
-        }
-    )
+        })
 }
 
 @Composable
@@ -161,8 +164,7 @@ private fun WidgetConfigContent(
     ) {
 
         Box(
-            modifier = Modifier
-                .height(4.dp)
+            modifier = Modifier.height(4.dp)
         ) {
             if (isSaving) {
                 LinearProgressIndicator(
@@ -190,8 +192,7 @@ private fun WidgetConfigContent(
                     Slider(
                         value = remained.percentage.coerceIn(0f, 1f),
                         onValueChange = onPercentageChanged,
-                        modifier = modifier
-                            .padding(horizontal = 16.dp),
+                        modifier = modifier.padding(horizontal = 16.dp),
                     )
                 }
 

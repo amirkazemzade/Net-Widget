@@ -13,13 +13,20 @@ class SetRemainedWidgetConfigUseCase @Inject constructor(
     private val remainedLocalDataSource: RemainedLocalDataSource,
 ) {
     operator fun invoke(
+        widgetId: Int,
         config: RemainedWidgetConfig,
     ): Flow<RequestStatus<Unit>> = flow {
         emit(RequestStatus.Loading)
 
         try {
-            remainedLocalDataSource.setDataDisplayMode(config.dataDisplayMode)
-            remainedLocalDataSource.setSpellingMode(config.spellingMode)
+            remainedLocalDataSource.setDataDisplayMode(
+                widgetId = widgetId,
+                mode = config.dataDisplayMode
+            )
+            remainedLocalDataSource.setSpellingMode(
+                widgetId = widgetId,
+                mode = config.spellingMode
+            )
             emit(RequestStatus.Success(Unit))
         } catch (e: Exception) {
             emit(RequestStatus.Error(message = e.localizedMessage ?: "Something went wrong"))
