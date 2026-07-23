@@ -27,12 +27,45 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew :app:testDebugUnitTest
 
+      - name: Verify Tag Version Matches App Version
+        if: startsWith(github.ref, 'refs/tags/v')
+        id: check_version
+        run: |
+          # Extract tag version (removes 'refs/tags/' prefix)
+          TAG_VERSION="${GITHUB_REF#refs/tags/}"
+          # Remove the 'v' prefix for comparison
+          TAG_VERSION="${TAG_VERSION#v}"
+          
+          # Added '|| true' so the script doesn't crash if the Gradle task is missing
+          APP_VERSION=$(./gradlew -q :app:printVersionName 2>/dev/null || ./gradlew -q printVersionName 2>/dev/null || true)
+          
+          # Fallback regex extraction using PCRE
+          if [ -z "$APP_VERSION" ]; then
+            # Added '|| true' here as well so a failed grep doesn't crash the script
+            APP_VERSION=$(grep -h -m 1 -oP 'versionName\s*=?\s*["\047]\K[^"\047]+' app/build.gradle* 2>/dev/null || true)
+          fi
+          
+          echo "Git Tag Version (stripped): $TAG_VERSION"
+          echo "App Version (extracted): $APP_VERSION"
+          
+          if [ "$TAG_VERSION" != "$APP_VERSION" ]; then
+            echo "::error::Version match failed!"
+            echo "::error::If the tag is correct (v$TAG_VERSION), the App versionName must be exactly: $TAG_VERSION"
+            echo "::error::If the App version is correct ($APP_VERSION), the Git tag should have been: v$APP_VERSION"
+            echo "::error::Actual comparison -> Git Tag provided: '$TAG_VERSION' | App version found: '$APP_VERSION'"
+            echo "match=false" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "Version match confirmed."
+            echo "match=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build Release APKs
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') && steps.check_version.outputs.match == 'true'
         run: ./gradlew :app:assembleRelease
 
       - name: Sign APKs
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') && steps.check_version.outputs.match == 'true'
         uses: r0adkll/sign-android-release@v1
         id: sign_app
         with:
@@ -45,7 +78,7 @@ jobs:
           BUILD_TOOLS_VERSION: "34.0.0"
 
       - name: Clean up and Prepare Artifacts
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') && steps.check_version.outputs.match == 'true'
         run: |
           cd app/build/outputs/apk/release
           for file in *-signed.apk; do
@@ -55,7 +88,7 @@ jobs:
           ls -la
 
       - name: Create Release and Upload APKs
-        if: startsWith(github.ref, 'refs/tags/')
+        if: startsWith(github.ref, 'refs/tags/') && steps.check_version.outputs.match == 'true'
         uses: softprops/action-gh-release@v1
         with:
           files: |
