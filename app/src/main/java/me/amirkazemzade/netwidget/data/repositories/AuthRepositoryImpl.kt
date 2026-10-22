@@ -22,8 +22,10 @@ class AuthRepositoryImpl @Inject constructor(private val authApi: AuthApi) : Aut
         emit(RequestStatus.Loading)
         val response = authApi.getFiscalId(cookie = cookie.toHeaderValue())
         if (response.isSuccessful) {
-            val cookie = response.headers()["Set-Cookie"]?.toCookie()
-            emit(RequestStatus.Success(AuthenticatedResult(Unit, cookie)))
+            val newCookie = response.headers().values("Set-Cookie")
+                .firstOrNull { it.contains("session=", ignoreCase = true) }
+                ?.toCookie() ?: response.headers()["Set-Cookie"]?.toCookie()
+            emit(RequestStatus.Success(AuthenticatedResult(Unit, newCookie ?: cookie)))
         } else {
             emit(RequestStatus.Error(response.message(), response.code()))
         }
@@ -36,7 +38,9 @@ class AuthRepositoryImpl @Inject constructor(private val authApi: AuthApi) : Aut
         val response = authApi.captcha(cookie = cookie?.toHeaderValue())
         if (response.isSuccessful) {
             val data = response.body()!!.toCaptchaBase64()
-            val cookie = response.headers()["Set-Cookie"]?.toCookie()
+            val cookie = response.headers().values("Set-Cookie")
+                .firstOrNull { it.contains("session=", ignoreCase = true) }
+                ?.toCookie() ?: response.headers()["Set-Cookie"]?.toCookie()
             emit(RequestStatus.Success(AuthenticatedResult(data, cookie)))
         } else {
             emit(RequestStatus.Error(response.message(), response.code()))
