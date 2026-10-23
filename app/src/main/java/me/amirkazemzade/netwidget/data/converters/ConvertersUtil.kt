@@ -52,17 +52,21 @@ fun RemainedResponse.toRemained() = Remained(
 )
 
 fun String.toCookie(): Cookie {
-    val split = trim().split(";")
-    val map = split
-        .associate {
-            val parts = it.trim().split("=")
-            parts[0].trim() to parts[1].trim()
+    val map = trim().split(";")
+        .mapNotNull { part ->
+            val trimmed = part.trim()
+            if (trimmed.isEmpty()) return@mapNotNull null
+            val pieces = trimmed.split("=", limit = 2)
+            val key = pieces[0].trim().lowercase()
+            val value = if (pieces.size > 1) pieces[1].trim() else ""
+            key to value
         }
+        .toMap()
 
     return Cookie(
-        session = map["session"]!!,
-        path = map["Path"]!!,
-        expires = map["Expires"]!!
+        session = map["session"] ?: "",
+        path = map["path"] ?: "/",
+        expires = map["expires"] ?: map["max-age"] ?: ""
     )
 }
 

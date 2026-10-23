@@ -15,6 +15,7 @@ import me.amirkazemzade.netwidget.domain.models.DataDisplayMode
 import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.SpellingMode
 import me.amirkazemzade.netwidget.domain.models.Traffic
+import me.amirkazemzade.netwidget.domain.models.WidgetThemeMode
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,6 +37,8 @@ class RemainedLocalDataSource @Inject constructor(
 
     fun spellingModeKey(widgetId: Int) = stringPreferencesKey("spelling_mode_$widgetId")
 
+    fun widgetThemeModeKey(widgetId: Int) = stringPreferencesKey("widget_theme_mode_$widgetId")
+
     val remainedData: Flow<Remained?> = dataStore.data.map { preferences ->
         preferences.toRemained()
     }
@@ -45,9 +48,12 @@ class RemainedLocalDataSource @Inject constructor(
             preferences.toDataDisplayMode(widgetId)
         }
 
-
     fun getSpellingMode(widgetId: Int): Flow<SpellingMode?> = dataStore.data.map { preferences ->
         preferences.toSpellingMode(widgetId)
+    }
+
+    fun getWidgetThemeMode(widgetId: Int): Flow<WidgetThemeMode?> = dataStore.data.map { preferences ->
+        preferences.toWidgetThemeMode(widgetId)
     }
 
     suspend fun setRemained(remained: Remained) {
@@ -66,6 +72,12 @@ class RemainedLocalDataSource @Inject constructor(
     suspend fun setSpellingMode(widgetId: Int, mode: SpellingMode) {
         dataStore.edit { preferences ->
             preferences[spellingModeKey(widgetId = widgetId)] = mode.name
+        }
+    }
+
+    suspend fun setWidgetThemeMode(widgetId: Int, mode: WidgetThemeMode) {
+        dataStore.edit { preferences ->
+            preferences[widgetThemeModeKey(widgetId = widgetId)] = mode.name
         }
     }
 
@@ -88,5 +100,10 @@ class RemainedLocalDataSource @Inject constructor(
     private fun Preferences.toSpellingMode(widgetId: Int): SpellingMode? {
         val rawValue = this[spellingModeKey(widgetId)] ?: return null
         return SpellingMode.valueOfOrNull(rawValue)
+    }
+
+    private fun Preferences.toWidgetThemeMode(widgetId: Int): WidgetThemeMode? {
+        val rawValue = this[widgetThemeModeKey(widgetId)] ?: return null
+        return WidgetThemeMode.valueOfOrNull(rawValue)
     }
 }

@@ -16,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import me.amirkazemzade.netwidget.ui.config.WidgetConfigScreen
 import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
+import me.amirkazemzade.netwidget.ui.widgets.remained.RemainedGlanceWidget1x1
 import me.amirkazemzade.netwidget.ui.widgets.remained.RemainedGlanceWidget1x4
 
 @AndroidEntryPoint
@@ -39,6 +40,9 @@ class WidgetConfigActivity : ComponentActivity() {
             return
         }
 
+        val appWidgetInfo = AppWidgetManager.getInstance(this).getAppWidgetInfo(appWidgetId)
+        val is1x1 = appWidgetInfo?.provider?.className?.contains("1x1") == true
+
         setContent {
             NetWidgetAppTheme {
                 val surface = MaterialTheme.colorScheme.surface
@@ -52,7 +56,8 @@ class WidgetConfigActivity : ComponentActivity() {
                 }
 
                 WidgetConfigScreen(
-                    appWidgetId= appWidgetId,
+                    appWidgetId = appWidgetId,
+                    is1x1 = is1x1,
                     showNavIcon = false,
                     onNavigateBack = {
                         finish()
@@ -61,6 +66,7 @@ class WidgetConfigActivity : ComponentActivity() {
                         completeWidgetConfiguration(
                             context = this,
                             appWidgetId = appWidgetId,
+                            is1x1 = is1x1,
                         )
                     }
                 )
@@ -72,6 +78,7 @@ class WidgetConfigActivity : ComponentActivity() {
     private fun completeWidgetConfiguration(
         context: Context,
         appWidgetId: Int,
+        is1x1: Boolean,
     ) {
 
         // Tell launcher configuration succeeded
@@ -85,11 +92,20 @@ class WidgetConfigActivity : ComponentActivity() {
         setResult(RESULT_OK, result)
 
         lifecycleScope.launch {
-            RemainedGlanceWidget1x4().update(
-                context = context,
-                id = GlanceAppWidgetManager(this@WidgetConfigActivity)
-                    .getGlanceIdBy(appWidgetId)
-            )
+            val glanceId = GlanceAppWidgetManager(this@WidgetConfigActivity)
+                .getGlanceIdBy(appWidgetId)
+
+            if (is1x1) {
+                RemainedGlanceWidget1x1().update(
+                    context = context,
+                    id = glanceId,
+                )
+            } else {
+                RemainedGlanceWidget1x4().update(
+                    context = context,
+                    id = glanceId,
+                )
+            }
 
             finish()
         }

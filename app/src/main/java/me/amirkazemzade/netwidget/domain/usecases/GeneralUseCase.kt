@@ -59,13 +59,11 @@ abstract class GeneralUseCase<T>(
             request()
                 .onEach { result ->
                     when (result) {
-                        is Success<AuthenticatedResult<T>> if (result.data.cookie != null) -> {
-                            cookieRepository.setCookie(result.data.cookie)
-                            emit(Success(transform(result.data.data)))
-                        }
-
                         is Success<AuthenticatedResult<T>> -> {
-                            emit(Error(InvalidAuthenticationException()))
+                            if (result.data.cookie != null) {
+                                cookieRepository.setCookie(result.data.cookie)
+                            }
+                            emit(Success(transform(result.data.data)))
                         }
 
                         is Error -> emit(Error(result.message, result.statusCode))

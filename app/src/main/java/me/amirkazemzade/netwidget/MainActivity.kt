@@ -1,5 +1,7 @@
 package me.amirkazemzade.netwidget
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -16,6 +18,7 @@ import kotlinx.coroutines.launch
 import me.amirkazemzade.netwidget.ui.AuthStateViewModel
 import me.amirkazemzade.netwidget.ui.navigation.NavGraph
 import me.amirkazemzade.netwidget.ui.theme.NetWidgetAppTheme
+import me.amirkazemzade.netwidget.ui.widgets.remained.RemainedGlanceWidgetReceiver1x1
 import me.amirkazemzade.netwidget.ui.widgets.remained.setRemainedWidgetPreview
 
 @AndroidEntryPoint
@@ -44,6 +47,14 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             setRemainedWidgetPreview(this@MainActivity)
+        }
+
+        if (intent?.action == "me.amirkazemzade.netwidget.ACTION_PIN_1X1_WIDGET") {
+            val appWidgetManager = getSystemService(AppWidgetManager::class.java)
+            val myProvider = ComponentName(this, RemainedGlanceWidgetReceiver1x1::class.java)
+            if (appWidgetManager.isRequestPinAppWidgetSupported) {
+                appWidgetManager.requestPinAppWidget(myProvider, null, null)
+            }
         }
     }
 }

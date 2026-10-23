@@ -15,6 +15,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import me.amirkazemzade.netwidget.domain.models.RequestStatus
 import me.amirkazemzade.netwidget.ui.dashboard.components.DashboardView
+import me.amirkazemzade.netwidget.ui.widgets.remained.RemainedGlanceWidget1x1
 import me.amirkazemzade.netwidget.ui.widgets.remained.RemainedGlanceWidget1x4
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
@@ -46,6 +47,7 @@ fun DashboardScreen(
     LaunchedEffect(Unit) {
         dashboardViewModel.shouldUpdateWidgets.collect {
             RemainedGlanceWidget1x4().updateAll(context)
+            RemainedGlanceWidget1x1().updateAll(context)
         }
     }
 

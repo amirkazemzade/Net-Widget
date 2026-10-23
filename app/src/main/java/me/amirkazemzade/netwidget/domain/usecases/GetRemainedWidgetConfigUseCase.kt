@@ -6,6 +6,7 @@ import me.amirkazemzade.netwidget.data.datasource.RemainedLocalDataSource
 import me.amirkazemzade.netwidget.domain.models.DataDisplayMode
 import me.amirkazemzade.netwidget.domain.models.RemainedWidgetConfig
 import me.amirkazemzade.netwidget.domain.models.SpellingMode
+import me.amirkazemzade.netwidget.domain.models.WidgetThemeMode
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,12 +16,14 @@ class GetRemainedWidgetConfigUseCase @Inject constructor(
 ) {
     operator fun invoke(appWidgetId: Int): Flow<RemainedWidgetConfig> {
         return combine(
-            flow = remainedLocalDataSource.getDataDisplayMode(appWidgetId),
-            flow2 = remainedLocalDataSource.getSpellingMode(appWidgetId),
-        ) { displayMode, spellingMode ->
+            remainedLocalDataSource.getDataDisplayMode(appWidgetId),
+            remainedLocalDataSource.getSpellingMode(appWidgetId),
+            remainedLocalDataSource.getWidgetThemeMode(appWidgetId),
+        ) { displayMode, spellingMode, themeMode ->
             RemainedWidgetConfig(
                 dataDisplayMode = displayMode ?: DataDisplayMode.PERCENTAGE,
-                spellingMode = spellingMode ?: SpellingMode.Short
+                spellingMode = spellingMode ?: SpellingMode.Short,
+                themeMode = themeMode ?: WidgetThemeMode.OPAQUE,
             )
         }
     }

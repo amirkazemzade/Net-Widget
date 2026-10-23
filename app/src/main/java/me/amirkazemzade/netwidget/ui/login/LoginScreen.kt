@@ -24,6 +24,7 @@ import me.amirkazemzade.netwidget.ui.theme.PreviewTheme
 
 @Composable
 fun LoginScreen(
+    onLoginSuccess: () -> Unit = {},
     loginViewModel: LoginViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -62,6 +63,8 @@ fun LoginScreen(
                         context.getString(R.string.logged_in_successfully),
                         Toast.LENGTH_SHORT
                     ).show()
+
+                    onLoginSuccess()
                 }
             }
         }

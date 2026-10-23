@@ -35,4 +35,8 @@
     <string name="short_text">کوتاه</string>
     <string name="full">کامل</string>
     <string name="suffix_display_mode">نحوه نمایش پسوند</string>
+    <string name="remained_internet_circle">اینترنت باقی‌مانده (دایره‌ای)</string>
+    <string name="theme_mode">ظاهر ویجت</string>
+    <string name="theme_opaque">مات و رنگی</string>
+    <string name="theme_transparent">شیشه‌ای (شفاف)</string>
 </resources>
