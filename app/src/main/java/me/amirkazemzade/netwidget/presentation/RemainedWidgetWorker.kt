@@ -14,6 +14,7 @@ import me.amirkazemzade.netwidget.data.datasource.RemainedLocalDataSource
 import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.RequestStatus
 import me.amirkazemzade.netwidget.domain.usecases.FetchRemainedUseCase
+import me.amirkazemzade.netwidget.ui.widgets.remained.RemainedGlanceWidget1x1
 import me.amirkazemzade.netwidget.ui.widgets.remained.RemainedGlanceWidget1x4
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
@@ -45,6 +46,7 @@ class RemainedWidgetUpdateWorker(
                     remainedLocalDataSource.setRemained(state.data)
 
                     RemainedGlanceWidget1x4().updateAll(context)
+                    RemainedGlanceWidget1x1().updateAll(context)
 
                     Result.success()
                 }

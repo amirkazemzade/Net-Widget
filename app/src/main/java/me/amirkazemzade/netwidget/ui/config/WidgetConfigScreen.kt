@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.LinearProgressIndicator
@@ -34,8 +36,10 @@ import me.amirkazemzade.netwidget.domain.models.DataDisplayMode
 import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.SpellingMode
 import me.amirkazemzade.netwidget.domain.models.Traffic
+import me.amirkazemzade.netwidget.domain.models.WidgetThemeMode
 import me.amirkazemzade.netwidget.ui.config.components.DataDisplayModeCard
 import me.amirkazemzade.netwidget.ui.config.components.SuffixSpellingModeCard
+import me.amirkazemzade.netwidget.ui.config.components.ThemeModeCard
 import me.amirkazemzade.netwidget.ui.config.components.WidgetConfigTopAppBar
 import me.amirkazemzade.netwidget.ui.config.components.WidgetPreviewBox
 import me.amirkazemzade.netwidget.ui.config.defaults.WidgetConfigDefaults
@@ -49,6 +53,7 @@ fun WidgetConfigScreen(
     onUpdateWidget: () -> Unit,
     onNavigateBack: () -> Unit,
     showNavIcon: Boolean = false,
+    is1x1: Boolean = false,
     viewModel: WidgetConfigViewModel =
         hiltViewModel<WidgetConfigViewModel, WidgetConfigViewModel.Factory> { factory ->
             factory.create(appWidgetId)
@@ -86,13 +91,22 @@ fun WidgetConfigScreen(
         configState = configState,
         remained = remained,
         showNavIcon = showNavIcon,
+        is1x1 = is1x1,
         onNavigateBack = onNavigateBack,
-        onSaveConfig = { viewModel.save() },
+        onSaveConfig = {
+            if (is1x1) {
+                viewModel.updateSpellingMode(SpellingMode.Short)
+            }
+            viewModel.save()
+        },
         onSelectDisplayMode = { displayMode: DataDisplayMode ->
             viewModel.updateDataDisplayMode(displayMode)
         },
         onSelectSpellingMode = { spellingMode: SpellingMode ->
             viewModel.updateSpellingMode(spellingMode)
+        },
+        onSelectThemeMode = { themeMode: WidgetThemeMode ->
+            viewModel.updateThemeMode(themeMode)
         },
         onPercentageChanged = { percentage ->
             remainedPercentage = percentage
@@ -105,10 +119,12 @@ private fun WidgetConfigScreenLayout(
     configState: WidgetConfigUiState,
     remained: Remained,
     showNavIcon: Boolean,
+    is1x1: Boolean,
     onNavigateBack: () -> Unit,
     onSaveConfig: () -> Unit,
     onSelectDisplayMode: (DataDisplayMode) -> Unit,
     onSelectSpellingMode: (SpellingMode) -> Unit,
+    onSelectThemeMode: (WidgetThemeMode) -> Unit,
     onPercentageChanged: (Float) -> Unit,
 ) {
     Scaffold(
@@ -136,11 +152,14 @@ private fun WidgetConfigScreenLayout(
         } else {
             WidgetConfigContent(
                 isSaving = configState.isSaving,
+                is1x1 = is1x1,
                 dataDisplayMode = configState.remainedWidgetConfig.dataDisplayMode,
                 spellingMode = configState.remainedWidgetConfig.spellingMode,
+                themeMode = configState.remainedWidgetConfig.themeMode,
                 remained = remained,
                 onSelectDisplayMode = onSelectDisplayMode,
                 onSelectSpellingMode = onSelectSpellingMode,
+                onSelectThemeMode = onSelectThemeMode,
                 onPercentageChanged = onPercentageChanged,
                 modifier = modifier,
             )
@@ -152,10 +171,13 @@ private fun WidgetConfigScreenLayout(
 private fun WidgetConfigContent(
     modifier: Modifier = Modifier,
     isSaving: Boolean = false,
+    is1x1: Boolean = false,
     onSelectDisplayMode: (DataDisplayMode) -> Unit,
     onSelectSpellingMode: (SpellingMode) -> Unit,
+    onSelectThemeMode: (WidgetThemeMode) -> Unit = {},
     dataDisplayMode: DataDisplayMode = DataDisplayMode.PERCENTAGE,
     spellingMode: SpellingMode = SpellingMode.Short,
+    themeMode: WidgetThemeMode = WidgetThemeMode.OPAQUE,
     remained: Remained = WidgetConfigDefaults.defaultRemainedValue,
     onPercentageChanged: (Float) -> Unit = {},
 ) {
@@ -177,6 +199,8 @@ private fun WidgetConfigContent(
             remained = remained,
             selectedDataDisplayMode = dataDisplayMode,
             selectedSpellingMode = spellingMode,
+            selectedThemeMode = themeMode,
+            is1x1 = is1x1,
         )
 
         Surface(
@@ -184,7 +208,9 @@ private fun WidgetConfigContent(
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            Column {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
 
                 val modifier = Modifier.padding(16.dp)
 
@@ -203,7 +229,7 @@ private fun WidgetConfigContent(
                     modifier = modifier,
                 )
 
-                if (dataDisplayMode == DataDisplayMode.TRAFFIC) {
+                if (!is1x1 && dataDisplayMode == DataDisplayMode.TRAFFIC) {
                     SuffixSpellingModeCard(
                         enabled = !isSaving,
                         selectedMode = spellingMode,
@@ -223,8 +249,12 @@ private fun WidgetConfigScreenPreviewTheme() {
     PreviewTheme {
         WidgetConfigContent(
             dataDisplayMode = DataDisplayMode.TRAFFIC,
+            is1x1 = true,
+            themeMode = WidgetThemeMode.OPAQUE,
             onSelectDisplayMode = {},
             onSelectSpellingMode = {},
+            onSelectThemeMode = {},
         )
     }
 }
+

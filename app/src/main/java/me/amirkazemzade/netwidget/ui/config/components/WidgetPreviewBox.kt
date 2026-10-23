@@ -17,6 +17,8 @@ import me.amirkazemzade.netwidget.R
 import me.amirkazemzade.netwidget.domain.models.DataDisplayMode
 import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.SpellingMode
+import me.amirkazemzade.netwidget.domain.models.WidgetThemeMode
+import me.amirkazemzade.netwidget.ui.config.preview.RemainedWidget1x1Preview
 import me.amirkazemzade.netwidget.ui.config.preview.RemainedWidgetPreview
 
 @Composable
@@ -24,9 +26,13 @@ fun WidgetPreviewBox(
     remained: Remained,
     selectedDataDisplayMode: DataDisplayMode,
     selectedSpellingMode: SpellingMode,
+    selectedThemeMode: WidgetThemeMode = WidgetThemeMode.OPAQUE,
+    is1x1: Boolean = false,
 ) {
     Box(
-        modifier = Modifier.padding(horizontal = 32.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp),
     ) {
         Box(
             modifier = Modifier
@@ -46,14 +52,26 @@ fun WidgetPreviewBox(
             )
         }
 
-        RemainedWidgetPreview(
-            remained = remained,
-            dataDisplayMode = selectedDataDisplayMode,
-            spellingMode = selectedSpellingMode,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .padding(vertical = 64.dp)
-                .fillMaxWidth()
-        )
+        if (is1x1) {
+            RemainedWidget1x1Preview(
+                remained = remained,
+                dataDisplayMode = selectedDataDisplayMode,
+                spellingMode = selectedSpellingMode,
+                themeMode = selectedThemeMode,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(vertical = 40.dp)
+            )
+        } else {
+            RemainedWidgetPreview(
+                remained = remained,
+                dataDisplayMode = selectedDataDisplayMode,
+                spellingMode = selectedSpellingMode,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(vertical = 64.dp)
+                    .fillMaxWidth()
+            )
+        }
     }
 }

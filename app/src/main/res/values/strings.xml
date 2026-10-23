@@ -35,4 +35,8 @@
     <string name="short_text">Short</string>
     <string name="full">Full</string>
     <string name="suffix_display_mode">Suffix Display Mode</string>
+    <string name="remained_internet_circle">Remained Internet (Circle)</string>
+    <string name="theme_mode">Theme Mode</string>
+    <string name="theme_opaque">Opaque</string>
+    <string name="theme_transparent">Transparent (Glass)</string>
 </resources>

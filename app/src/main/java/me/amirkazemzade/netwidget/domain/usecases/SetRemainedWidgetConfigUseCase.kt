@@ -27,6 +27,10 @@ class SetRemainedWidgetConfigUseCase @Inject constructor(
                 widgetId = widgetId,
                 mode = config.spellingMode
             )
+            remainedLocalDataSource.setWidgetThemeMode(
+                widgetId = widgetId,
+                mode = config.themeMode
+            )
             emit(RequestStatus.Success(Unit))
         } catch (e: Exception) {
             emit(RequestStatus.Error(message = e.localizedMessage ?: "Something went wrong"))

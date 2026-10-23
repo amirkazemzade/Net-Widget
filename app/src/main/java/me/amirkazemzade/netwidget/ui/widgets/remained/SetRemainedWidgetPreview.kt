@@ -24,7 +24,10 @@ suspend fun setRemainedWidgetPreview(context: Context) {
         return providerInfo.generatedPreviewCategories.and(widgetCategory) != 0
     }
 
-    val receiverClasses = listOf(RemainedGlanceWidgetReceiver1x4::class.java as Class<GlanceAppWidgetReceiver>)
+    val receiverClasses = listOf(
+        RemainedGlanceWidgetReceiver1x4::class.java as Class<GlanceAppWidgetReceiver>,
+        RemainedGlanceWidgetReceiver1x1::class.java as Class<GlanceAppWidgetReceiver>,
+    )
     val glanceAppWidgetManager = GlanceAppWidgetManager(context)
     withContext(Dispatchers.Default) {
         try {

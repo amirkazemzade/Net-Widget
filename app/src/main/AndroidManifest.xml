@@ -42,6 +42,18 @@
                     android:resource="@xml/remained_glance_widget_info_1x4" />
         </receiver>
 
+        <receiver
+                android:name=".ui.widgets.remained.RemainedGlanceWidgetReceiver1x1"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                    android:name="android.appwidget.provider"
+                    android:resource="@xml/remained_glance_widget_info_1x1" />
+        </receiver>
+
         <provider
                 android:name="androidx.startup.InitializationProvider"
                 android:authorities="${applicationId}.androidx-startup"

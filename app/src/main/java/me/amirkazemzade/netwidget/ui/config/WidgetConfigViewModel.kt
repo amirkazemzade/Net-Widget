@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import me.amirkazemzade.netwidget.domain.models.DataDisplayMode
 import me.amirkazemzade.netwidget.domain.models.RequestStatus
 import me.amirkazemzade.netwidget.domain.models.SpellingMode
+import me.amirkazemzade.netwidget.domain.models.WidgetThemeMode
 import me.amirkazemzade.netwidget.domain.usecases.GetRemainedWidgetConfigUseCase
 import me.amirkazemzade.netwidget.domain.usecases.SetRemainedWidgetConfigUseCase
 
@@ -67,6 +68,16 @@ class WidgetConfigViewModel @AssistedInject constructor(
             widgetConfigUiState.copy(
                 remainedWidgetConfig = widgetConfigUiState.remainedWidgetConfig.copy(
                     spellingMode = spellingMode
+                )
+            )
+        }
+    }
+
+    fun updateThemeMode(themeMode: WidgetThemeMode) {
+        _currentConfigState.update { widgetConfigUiState ->
+            widgetConfigUiState.copy(
+                remainedWidgetConfig = widgetConfigUiState.remainedWidgetConfig.copy(
+                    themeMode = themeMode
                 )
             )
         }
