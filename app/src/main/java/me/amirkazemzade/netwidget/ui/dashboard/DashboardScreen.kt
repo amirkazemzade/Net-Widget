@@ -8,15 +8,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.glance.appwidget.updateAll
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import me.amirkazemzade.netwidget.domain.models.RequestStatus
 import me.amirkazemzade.netwidget.ui.dashboard.components.DashboardView
-import me.amirkazemzade.netwidget.ui.widgets.remained.RemainedGlanceWidget1x1
-import me.amirkazemzade.netwidget.ui.widgets.remained.RemainedGlanceWidget1x4
+import me.amirkazemzade.netwidget.ui.widgets.remained.updateAllRemainedWidgets
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -46,8 +44,7 @@ fun DashboardScreen(
 
     LaunchedEffect(Unit) {
         dashboardViewModel.shouldUpdateWidgets.collect {
-            RemainedGlanceWidget1x4().updateAll(context)
-            RemainedGlanceWidget1x1().updateAll(context)
+            updateAllRemainedWidgets(context)
         }
     }
 

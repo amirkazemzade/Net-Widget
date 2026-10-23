@@ -2,7 +2,6 @@ package me.amirkazemzade.netwidget.presentation
 
 import android.content.Context
 import android.util.Log
-import androidx.glance.appwidget.updateAll
 import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
@@ -14,8 +13,7 @@ import me.amirkazemzade.netwidget.data.datasource.RemainedLocalDataSource
 import me.amirkazemzade.netwidget.domain.models.Remained
 import me.amirkazemzade.netwidget.domain.models.RequestStatus
 import me.amirkazemzade.netwidget.domain.usecases.FetchRemainedUseCase
-import me.amirkazemzade.netwidget.ui.widgets.remained.RemainedGlanceWidget1x1
-import me.amirkazemzade.netwidget.ui.widgets.remained.RemainedGlanceWidget1x4
+import me.amirkazemzade.netwidget.ui.widgets.remained.updateAllRemainedWidgets
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.minutes
 
@@ -45,8 +43,7 @@ class RemainedWidgetUpdateWorker(
                 is RequestStatus.Success<Remained> -> {
                     remainedLocalDataSource.setRemained(state.data)
 
-                    RemainedGlanceWidget1x4().updateAll(context)
-                    RemainedGlanceWidget1x1().updateAll(context)
+                    updateAllRemainedWidgets(context)
 
                     Result.success()
                 }
