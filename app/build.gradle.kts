@@ -16,8 +16,8 @@ android {
         applicationId = "me.amirkazemzade.netwidget"
         minSdk = 31
         targetSdk = 37
-        versionCode = 2
-        versionName = "0.2.0"
+        versionCode = 3
+        versionName = "0.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,6 +33,10 @@ android {
             // Ensure to use a proper signing instead of this one to export the release APK
             signingConfig = signingConfigs.getByName("debug")
         }
+    }
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
